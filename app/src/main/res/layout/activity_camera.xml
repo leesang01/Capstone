@@ -7,35 +7,48 @@
     android:padding="24dp"
     android:background="@drawable/bg_forest">
 
-    <!-- 카메라 인증 제목 -->
-    <TextView
+    <!-- 버튼 박스 (카메라 인증 제목 포함) -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="카메라 인증"
-        android:textSize="32sp"
-        android:textColor="#2E7D32"
-        android:textStyle="bold"
-        android:layout_marginBottom="32dp" />
+        android:background="@drawable/bg_mission_box"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:elevation="6dp"
+        android:layout_marginTop="16dp">
 
-    <!-- 촬영하기 버튼 -->
-    <Button
-        android:id="@+id/btnCapture"
-        android:layout_width="250dp"
-        android:layout_height="60dp"
-        android:text="촬영하기"
-        android:textSize="20sp"
-        android:backgroundTint="#2E7D32"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="20dp" />
+        <!-- 카메라 인증 제목 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="카메라 인증"
+            android:textSize="32sp"
+            android:textColor="#2E7D32"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
 
-    <!-- 취소 버튼 -->
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="250dp"
-        android:layout_height="60dp"
-        android:text="취소"
-        android:textSize="20sp"
-        android:backgroundTint="#FF7043"
-        android:textColor="#FFFFFF" />
+        <!-- 촬영하기 버튼 (초록색) -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCapture"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="촬영하기"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#4CAF50"
+            android:layout_marginBottom="20dp" />
+
+        <!-- 취소 버튼 (빨간색) -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCancel"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="취소"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#F44336" />
+
+    </LinearLayout>
 
 </LinearLayout>

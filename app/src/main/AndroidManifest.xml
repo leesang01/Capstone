@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ecochallengeapp">
 
-    <!-- ✅ 카메라 권한 추가 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EcoChallengeApp"
-        tools:targetApi="31">
+        android:theme="@style/Theme.EcoChallengeApp">
 
+        <!-- 메인 액티비티 -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -26,12 +24,16 @@
             </intent-filter>
         </activity>
 
+        <!-- 미션 목록 액티비티 -->
         <activity
             android:name=".MissionsActivity"
-            android:exported="false" />
+            android:exported="true" />
+
+        <!-- 카메라 인증 액티비티 -->
+        <activity
+            android:name=".CameraActivity"
+            android:exported="true" />
 
     </application>
 
 </manifest>
-
-

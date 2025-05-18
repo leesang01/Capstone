@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@drawable/bg_forest">
+
+    <!-- 카메라 인증 제목 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="카메라 인증"
+        android:textSize="32sp"
+        android:textColor="#2E7D32"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp" />
+
+    <!-- 촬영하기 버튼 -->
+    <Button
+        android:id="@+id/btnCapture"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:text="촬영하기"
+        android:textSize="20sp"
+        android:backgroundTint="#2E7D32"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="20dp" />
+
+    <!-- 취소 버튼 -->
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:text="취소"
+        android:textSize="20sp"
+        android:backgroundTint="#FF7043"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

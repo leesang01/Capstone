@@ -4,8 +4,11 @@
 
     <!-- 권한 -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- ✅ 카메라 기능은 선택 사항임을 명시 -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -35,7 +38,7 @@
             android:name=".CameraActivity"
             android:exported="true" />
 
-        <!-- ✅ 커뮤니티 액티비티 등록 -->
+        <!-- 커뮤니티 액티비티 -->
         <activity
             android:name=".CommunityActivity"
             android:exported="true" />

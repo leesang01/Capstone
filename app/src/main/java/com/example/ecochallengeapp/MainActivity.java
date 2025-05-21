@@ -24,9 +24,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // ✅ 미션 버튼 클릭 시 실행되는 함수 추가
+    // ✅ 미션 버튼
     public void goToMissions(View view) {
         Intent intent = new Intent(this, MissionsActivity.class);
+        startActivity(intent);
+    }
+
+    // ✅ 커뮤니티 버튼
+    public void goToCommunity(View view) {
+        Intent intent = new Intent(this, CommunityActivity.class);
         startActivity(intent);
     }
 }

@@ -1,54 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="@drawable/bg_forest">
+    android:layout_height="match_parent">
 
-    <!-- 버튼 박스 (카메라 인증 제목 포함) -->
+    <!-- 🌲 배경 이미지 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_forest" />
+
+    <!-- 🌑 어두운 반투명 오버레이로 버튼 가독성 향상 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000" />
+
+    <!-- 📷 카메라 인증 UI 박스 -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_mission_box"
-        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:elevation="6dp"
-        android:layout_marginTop="16dp">
+        android:padding="24dp">
 
-        <!-- 카메라 인증 제목 -->
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="카메라 인증"
-            android:textSize="32sp"
-            android:textColor="#2E7D32"
-            android:textStyle="bold"
-            android:layout_marginBottom="24dp" />
+            android:background="@drawable/bg_mission_box"
+            android:padding="24dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:elevation="6dp">
 
-        <!-- 촬영하기 버튼 (초록색) -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnCapture"
-            android:layout_width="250dp"
-            android:layout_height="60dp"
-            android:text="촬영하기"
-            android:textSize="20sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#4CAF50"
-            android:layout_marginBottom="20dp" />
+            <!-- 제목 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="카메라 인증"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="#2E7D32"
+                android:layout_marginBottom="24dp" />
 
-        <!-- 취소 버튼 (빨간색) -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnCancel"
-            android:layout_width="250dp"
-            android:layout_height="60dp"
-            android:text="취소"
-            android:textSize="20sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#F44336" />
+            <!-- 촬영 버튼 -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCapture"
+                android:layout_width="250dp"
+                android:layout_height="60dp"
+                android:text="촬영하기"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#4CAF50"
+                android:layout_marginBottom="20dp" />
 
+            <!-- 취소 버튼 -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCancel"
+                android:layout_width="250dp"
+                android:layout_height="60dp"
+                android:text="취소"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#F44336" />
+        </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>

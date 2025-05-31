@@ -1,3 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">EcoChallengeApp</string>
+    <string name="app_name">EcoChallenge</string>
+    <string name="free_board_title">자유게시판</string>
+    <string name="btn_add">추가</string>
+    <string name="btn_delete">삭제</string>
+
+    <!-- 🔹 Google 로그인용 클라이언트 ID 추가 -->
+    <string name="default_web_client_id"><string name="default_web_client_id">1234567890-abc123def456.apps.googleusercontent.com</string>
+</string>
 </resources>

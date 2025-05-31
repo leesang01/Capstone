@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 🌲 배경 이미지 -->
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_forest" />
+
+    <!-- 🌑 어두운 오버레이 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000" /> <!-- 60% 투명 검정색 -->
+
+    <!-- ✅ BearRest 제목을 위쪽 중앙에 배치 -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BearRest"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="#2E7D32"
+        android:gravity="center"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentTop="true" />
+
+    <!-- 🌿 로그인 버튼 중앙 정렬 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btnGoogleLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>

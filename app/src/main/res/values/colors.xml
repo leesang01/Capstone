@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="shopBackground">#E8F5E9</color>
+    <color name="darkGreen">#2E7D32</color>
+    <color name="green">#1B5E20</color> <!-- 버튼에 사용 -->
 </resources>

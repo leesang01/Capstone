@@ -17,9 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EcoChallengeApp"
-        android:requestLegacyExternalStorage="true"> <!-- ✅ Android 10 대응 -->
+        android:requestLegacyExternalStorage="true">
 
-        <!-- ✅ FileProvider 설정 (사진 촬영 파일 공유에 필요) -->
+        <!-- ✅ FileProvider 설정 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.ecochallengeapp.provider"
@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
 
-        <!-- ✅ 나머지 액티비티들 -->
+        <!-- ✅ 액티비티 등록 -->
         <activity android:name=".MainActivity" android:exported="true" />
         <activity android:name=".MissionsActivity" android:exported="true" />
         <activity android:name=".CameraActivity" android:exported="true" />
@@ -46,6 +46,15 @@
         <activity android:name=".FreeBoardActivity" android:exported="true" />
         <activity android:name=".WriteActivity" android:exported="true" />
         <activity android:name=".PostDetailActivity" android:exported="true" />
+        <activity android:name=".ReviewWriteActivity" android:exported="true" />
+        <activity android:name=".ReviewBoardActivity" android:exported="true" />
+        <activity android:name=".QnaBoardActivity" android:exported="true" />
+        <activity android:name=".QnaWriteActivity" android:exported="true" />
+        <activity android:name=".NoticeBoardActivity" android:exported="true" />
+        <activity android:name=".NoticeWriteActivity" android:exported="true" />
 
+        <!-- ✅ 상점 액티비티 추가 -->
+        <activity android:name=".ShopActivity" android:exported="true" />
     </application>
+
 </manifest>

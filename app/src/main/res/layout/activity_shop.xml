@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 🍃 배경 이미지 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_forest" />
+
+    <!-- 🛍️ 상점 내용 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shop_panel_background"
+            android:padding="24dp"
+            android:elevation="6dp">
+
+            <!-- 🛒 제목 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="상점"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="@color/darkGreen"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp" />
+
+            <!-- 📦 아이템 목록 -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:alignmentMode="alignMargins"
+                android:useDefaultMargins="true">
+
+                <!-- 🎩 귀여운 모자 -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/item_background"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_hat"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="귀여운 모자"
+                        android:textColor="@color/darkGreen"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🪙 300"
+                        android:layout_gravity="center" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="구매"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@color/green" />
+                </LinearLayout>
+
+                <!-- 👕 초록색 티셔츠 -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/item_background"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_shirt"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="초록색 티셔츠"
+                        android:textColor="@color/darkGreen"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🪙 400"
+                        android:layout_gravity="center" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="구매"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@color/green" />
+                </LinearLayout>
+
+                <!-- 🍯 꿀통 -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/item_background"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_honey"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="꿀통"
+                        android:textColor="@color/darkGreen"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🪙 500"
+                        android:layout_gravity="center" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="구매"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@color/green" />
+                </LinearLayout>
+
+                <!-- 🗝️ 레벨업 키 -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/item_background"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_key"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="레벨업 키"
+                        android:textColor="@color/darkGreen"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🪙 600"
+                        android:layout_gravity="center" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="구매"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@color/green" />
+                </LinearLayout>
+            </GridLayout>
+
+            <!-- 📦 보관함으로 이동 버튼 -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_go_to_inventory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="보관함으로 이동"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="32dp"
+                android:padding="12dp"
+                android:background="@drawable/rounded_button_green" />
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

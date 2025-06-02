@@ -17,11 +17,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private Context context;
     private List<Post> posts;
     private List<String> postKeys;
+    private String boardType; // 🔸 게시판 종류 (freeboard, reviewboard, qnaboard, noticeboard 등)
 
-    public PostAdapter(Context context, List<Post> posts, List<String> postKeys) {
+    public PostAdapter(Context context, List<Post> posts, List<String> postKeys, String boardType) {
         this.context = context;
         this.posts = posts;
         this.postKeys = postKeys;
+        this.boardType = boardType;
     }
 
     public static class PostViewHolder extends RecyclerView.ViewHolder {
@@ -50,15 +52,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.textTitle.setText(post.title);
         holder.textMeta.setText(post.author + "   " + post.date);
 
-        // ✅ 게시글 클릭 시 상세보기로 이동 + content도 넘기기
+        // ✅ 게시글 클릭 시 상세보기로 이동 + 게시판 종류(boardType)도 함께 전달
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, PostDetailActivity.class);
             intent.putExtra("title", post.title);
-            intent.putExtra("content", post.content); // 🔹 내용 추가
+            intent.putExtra("content", post.content);
             intent.putExtra("author", post.author);
             intent.putExtra("date", post.date);
             intent.putExtra("uid", post.uid);
             intent.putExtra("key", postKey);
+            intent.putExtra("boardType", boardType); // 🔸 게시판 종류 넘기기 (noticeboard 등)
             context.startActivity(intent);
         });
     }

@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -33,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
     // ✅ 커뮤니티 버튼
     public void goToCommunity(View view) {
         Intent intent = new Intent(this, CommunityActivity.class);
+        startActivity(intent);
+    }
+
+    // ✅ 상점 버튼 (Shop 아이콘 클릭 시 실행)
+    public void goToShop(View view) {
+        Intent intent = new Intent(this, ShopActivity.class);
         startActivity(intent);
     }
 }

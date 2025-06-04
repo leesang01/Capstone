@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 더 화려한 그라디언트 말풍선 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 그라디언트 배경 - 자연 테마 -->
+    <gradient
+        android:startColor="#E8F5E8"
+        android:centerColor="#FFFEF7"
+        android:endColor="#F1F8E9"
+        android:angle="45"
+        android:type="linear"/>
+
+    <!-- 둥근 모서리 -->
+    <corners android:radius="25dp"/>
+
+    <!-- 테두리 -->
+    <stroke
+        android:width="3dp"
+        android:color="#66BB6A"/>
+
+    <!-- 그림자 효과 -->
+    <padding
+        android:left="6dp"
+        android:top="6dp"
+        android:right="6dp"
+        android:bottom="6dp"/>
+</shape>

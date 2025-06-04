@@ -33,7 +33,7 @@
             android:layout_marginEnd="4dp" />
 
         <TextView
-            android:id="@+id/coinCount"
+            android:id="@+id/coin_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
@@ -55,15 +55,38 @@
         android:layout_marginTop="40dp"
         android:layout_alignParentTop="true" />
 
-    <!-- 곰 캐릭터 -->
+    <!-- 🎈 간단한 말풍선 (오류 방지 버전) -->
+    <TextView
+        android:id="@+id/speechBubbleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bear_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/speech_bubble_bg"
+        android:text="🐻 안녕! 나를 클릭해봐!"
+        android:textColor="#2E7D32"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:maxWidth="250dp"
+        android:gravity="center"
+        android:elevation="8dp"
+        android:visibility="gone" />
+
+    <!-- 🐻 곰 캐릭터 (상호작용 가능) -->
     <ImageView
-        android:id="@+id/bear"
+        android:id="@+id/bear_image"
         android:layout_width="260dp"
         android:layout_height="260dp"
         android:layout_above="@id/bottomMenu"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/bear" />
+        android:src="@drawable/bear_happy"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="곰 캐릭터 - 클릭해서 대화하기" />
 
     <!-- 하단 메뉴 -->
     <LinearLayout
@@ -79,14 +102,14 @@
 
         <!-- Home -->
         <LinearLayout
+            android:id="@+id/btn_home"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
             android:clickable="true"
-            android:focusable="true"
-            android:onClick="goToHome">
+            android:focusable="true">
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -101,14 +124,14 @@
 
         <!-- Missions -->
         <LinearLayout
+            android:id="@+id/btn_missions"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
             android:clickable="true"
-            android:focusable="true"
-            android:onClick="goToMissions">
+            android:focusable="true">
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -123,14 +146,14 @@
 
         <!-- Community -->
         <LinearLayout
+            android:id="@+id/btn_community"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
             android:clickable="true"
-            android:focusable="true"
-            android:onClick="goToCommunity">
+            android:focusable="true">
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -145,14 +168,14 @@
 
         <!-- Shop -->
         <LinearLayout
+            android:id="@+id/btn_shop"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
             android:clickable="true"
-            android:focusable="true"
-            android:onClick="goToShop">
+            android:focusable="true">
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"

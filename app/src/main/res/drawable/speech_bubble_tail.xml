@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 말풍선 아래쪽 꼬리 (삼각형) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="12dp"
+    android:viewportWidth="24"
+    android:viewportHeight="12">
+
+    <!-- 말풍선 꼬리 내부 -->
+    <path
+        android:fillColor="#FFFEF7"
+        android:pathData="M12,0 L2,12 L22,12 Z"/>
+
+    <!-- 말풍선 꼬리 테두리 -->
+    <path
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="2"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M12,0 L2,12 L22,12"/>
+</vector>

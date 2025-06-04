@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 🌲 배경 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_forest"
+        android:scaleType="centerCrop" />
+
+    <!-- 📦 흰 박스 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@android:color/white"
+        android:padding="24dp"
+        android:elevation="8dp"
+        android:layout_gravity="center">
+
+        <!-- 📸 제목 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진 올리기"
+            android:textColor="#2E7D32"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 📷 사진 미리보기 -->
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp"
+            android:background="#CCCCCC" />
+
+        <!-- 🎉 획득 메시지 -->
+        <TextView
+            android:id="@+id/coinMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="16sp"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
+        <!-- 인증하기 버튼 -->
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="인증하기"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <!-- 메인 화면으로 -->
+        <Button
+            android:id="@+id/btnGoHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="메인 화면으로"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#388E3C"
+            android:visibility="visible" /> <!-- ✅ 항상 보이도록 수정됨 -->
+    </LinearLayout>
+</FrameLayout>

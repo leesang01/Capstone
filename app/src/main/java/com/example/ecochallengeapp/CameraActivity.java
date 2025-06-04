@@ -31,10 +31,17 @@ public class CameraActivity extends AppCompatActivity {
     private Uri photoUri;
     private String currentPhotoPath;
 
+    private int rewardCoin = 10; // 기본값
+    private String missionId = ""; // 미션 ID 값
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        // 📥 인텐트로부터 코인 보상 및 미션 ID 받아오기
+        rewardCoin = getIntent().getIntExtra("rewardCoin", 10);
+        missionId = getIntent().getStringExtra("missionId");
 
         // 📸 촬영 버튼
         Button captureButton = findViewById(R.id.btnCapture);
@@ -45,7 +52,6 @@ public class CameraActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(v -> finish());
     }
 
-    // ✅ 권한 확인
     private void checkCameraPermissionAndOpenCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -56,7 +62,6 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    // ✅ 권한 요청 결과 처리
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -72,7 +77,6 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    // ✅ 카메라 실행
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -102,7 +106,6 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    // ✅ 사진 파일 생성
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String fileName = "JPEG_" + timeStamp + "_";
@@ -112,14 +115,17 @@ public class CameraActivity extends AppCompatActivity {
         return image;
     }
 
-    // ✅ 사진 촬영 결과 처리
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Toast.makeText(this, "사진 촬영 성공\n저장 경로:\n" + currentPhotoPath, Toast.LENGTH_LONG).show();
-            // 이미지 표시하거나 Firebase 업로드 가능
+            Intent intent = new Intent(CameraActivity.this, PhotoUploadActivity.class);
+            intent.putExtra("photoPath", currentPhotoPath);
+            intent.putExtra("rewardCoin", rewardCoin);   // 보상 코인 전달
+            intent.putExtra("missionId", missionId);     // 미션 ID 전달
+            startActivity(intent);
+            finish();
         } else {
             Toast.makeText(this, "사진 촬영 취소 또는 실패", Toast.LENGTH_SHORT).show();
         }

@@ -55,6 +55,8 @@
 
         <!-- ✅ 상점 액티비티 추가 -->
         <activity android:name=".ShopActivity" android:exported="true" />
+        <activity android:name=".PhotoUploadActivity" android:exported="true" />
+
     </application>
 
 </manifest>

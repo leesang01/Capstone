@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "35679060521-gpsqn9i7a47n1r3qc4arb4r30hl5sd6t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ecochallengeapp",
+            "certificate_hash": "a5acf819806bbb7c176e988ab7ff405b7369e71a"
+          }
+        },
+        {
           "client_id": "35679060521-pc2sjvun3ta829qs62j3maf51r1h2gjj.apps.googleusercontent.com",
           "client_type": 3
         }

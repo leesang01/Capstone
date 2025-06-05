@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
 
     private TextView coinCountText;
+    private TextView expText; // ✅ 추가된 EXP 텍스트뷰 참조
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // 🔹 코인 텍스트뷰 연결
+        // 🔹 텍스트뷰 연결
         coinCountText = findViewById(R.id.coinCount);
+        expText = findViewById(R.id.expText); // ✅ EXP 텍스트뷰도 연결
 
         // 🔹 현재 로그인한 사용자 정보 가져오기
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             String uid = user.getUid();
 
-            // 🔹 해당 사용자의 코인 정보 불러오기
+            // 🔹 코인 불러오기
             DatabaseReference coinRef = FirebaseDatabase.getInstance()
                     .getReference("Users").child(uid).child("coin");
 
@@ -59,8 +61,19 @@ public class MainActivity extends AppCompatActivity {
                 coinCountText.setText("0");
             });
 
+            // ✅ EXP 불러오기
+            DatabaseReference expRef = FirebaseDatabase.getInstance()
+                    .getReference("Users").child(uid).child("exp");
+
+            expRef.get().addOnSuccessListener(snapshot -> {
+                int exp = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
+                expText.setText(exp + "/200");
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "EXP 불러오기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                expText.setText("0/200");
+            });
+
         } else {
-            // 🔐 로그인 안 되어있으면 로그인 화면으로 이동 (선택사항)
             Toast.makeText(this, "로그인이 필요합니다", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();

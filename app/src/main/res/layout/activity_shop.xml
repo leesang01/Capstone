@@ -66,11 +66,27 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp" />
 
-                    <TextView
+                    <!-- 코인 표시 -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🪙 300"
-                        android:layout_gravity="center" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_coin"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <Button
                         android:layout_width="match_parent"
@@ -80,7 +96,7 @@
                         android:backgroundTint="@color/green" />
                 </LinearLayout>
 
-                <!-- 👕 초록색 티셔츠 -->
+                <!-- 👕 곰 티셔츠 -->
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="0dp"
@@ -98,16 +114,31 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="초록색 티셔츠"
+                        android:text="곰 티셔츠"
                         android:textColor="@color/darkGreen"
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🪙 400"
-                        android:layout_gravity="center" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_coin"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <Button
                         android:layout_width="match_parent"
@@ -140,11 +171,26 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🪙 500"
-                        android:layout_gravity="center" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_coin"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="20"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <Button
                         android:layout_width="match_parent"
@@ -177,11 +223,26 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🪙 600"
-                        android:layout_gravity="center" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_gravity="center">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_coin"
+                            android:layout_marginEnd="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="150"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <Button
                         android:layout_width="match_parent"
@@ -206,7 +267,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 🔙 뒤로가기 버튼 (가장 위로 위치하도록 마지막에 추가함) -->
+    <!-- 🔙 뒤로가기 버튼 -->
     <ImageView
         android:id="@+id/btn_back"
         android:layout_width="40dp"

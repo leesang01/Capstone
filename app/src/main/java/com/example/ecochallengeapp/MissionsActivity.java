@@ -42,7 +42,7 @@ public class MissionsActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "\uB85C\uADF8\uC778\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
@@ -94,12 +94,12 @@ public class MissionsActivity extends AppCompatActivity {
             if (now - lastRefresh >= interval) {
                 prefs.edit().putLong("lastRefreshTime", now).apply();
                 refreshMissions();
-                Toast.makeText(this, "미션이 새로고침되었습니다!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "\uBBF8\uC158\uC774 \uC0C8\uB85C\uACE0\uCE68\uB418\uC5C8\uC2B5\uB2C8\uB2E4!", Toast.LENGTH_SHORT).show();
             } else {
                 long remainMillis = interval - (now - lastRefresh);
                 long hours = remainMillis / (1000 * 60 * 60);
                 long minutes = (remainMillis / (1000 * 60)) % 60;
-                Toast.makeText(this, "새로고침까지 " + hours + "시간 " + minutes + "분 남았습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "\uC0C8\uB85C\uACE0\uCE68\uAE4C\uC9C0 " + hours + "\uC2DC\uAC04 " + minutes + "\uBD84 \uB0A8\uC558\uC2B5\uB2C8\uB2E4.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -204,10 +204,22 @@ public class MissionsActivity extends AppCompatActivity {
         layout.setVisibility(View.VISIBLE);
         title.setText(mission.getTitle());
         coinText.setText(String.valueOf(mission.getCoin()));
-        completeText.setVisibility(View.GONE);
-        coinLayout.setVisibility(View.VISIBLE);
         iconView.setImageResource(getIconResourceForMission(mission.getTitle()));
-        layout.setOnClickListener(v -> openCameraActivity(mission.getCoin(), mission.getTitle()));
+
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("Users").child(uid).child("completedMissions").child(mission.getTitle());
+
+        ref.get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                coinLayout.setVisibility(View.GONE);
+                completeText.setVisibility(View.VISIBLE);
+                layout.setOnClickListener(null);
+            } else {
+                coinLayout.setVisibility(View.VISIBLE);
+                completeText.setVisibility(View.GONE);
+                layout.setOnClickListener(v -> openCameraActivity(mission.getCoin(), mission.getTitle()));
+            }
+        });
     }
 
     private int getIconResourceForMission(String title) {

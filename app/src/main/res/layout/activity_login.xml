@@ -15,9 +15,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#66000000" /> <!-- 60% 투명 검정색 -->
+        android:background="#66000000" />
 
-    <!-- ✅ BearRest 제목을 위쪽 중앙에 배치 -->
+    <!-- 제목 -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
         android:layout_marginTop="60dp"
         android:layout_alignParentTop="true" />
 
-    <!-- 🌿 로그인 버튼 중앙 정렬 -->
+    <!-- 버튼 영역 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,10 +38,18 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- ✅ Google 로그인 (변경하지 않음) -->
         <com.google.android.gms.common.SignInButton
             android:id="@+id/btnGoogleLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
 
+        <!-- ✅ Kakao 로그인 -->
+        <Button
+            android:id="@+id/btnKakaoLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="카카오 로그인"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
 </RelativeLayout>

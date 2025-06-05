@@ -27,11 +27,16 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
+    // 🐻 기존 백업 브랜치의 변수들
     private ImageView bearImage;
     private TextView coinText;
     private TextView speechBubbleText;
     private DatabaseReference userRef;
     private String uid;
+
+    // 🔹 마스터 브랜치에서 추가된 변수들
+    private TextView coinCountText;
+    private TextView expText; // ✅ 추가된 EXP 텍스트뷰 참조
 
     // 곰의 감정 상태
     private static enum BearState {
@@ -72,9 +77,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
+        // 🐻 기존 백업 브랜치의 뷰 연결
         bearImage = findViewById(R.id.bear_image);
         coinText = findViewById(R.id.coin_text);
         speechBubbleText = findViewById(R.id.speechBubbleText);
+        
+        // 🔹 마스터 브랜치에서 추가된 텍스트뷰 연결
+        coinCountText = findViewById(R.id.coinCount);
+        expText = findViewById(R.id.expText); // ✅ EXP 텍스트뷰도 연결
 
         // 🐻 곰 클릭 이벤트
         bearImage.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 기존 하단 메뉴 버튼들
+        // 기존 하단 메뉴 버튼들 (백업 브랜치에서 유지)
         findViewById(R.id.btn_missions).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,18 +134,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadUserData() {
+        // 🔹 코인 불러오기 (기존 방식 유지)
         userRef.child("coin").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int coin = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
                 coinText.setText(String.valueOf(coin));
+                
+                // 🔹 coinCountText가 존재하면 업데이트
+                if (coinCountText != null) {
+                    coinCountText.setText(String.valueOf(coin));
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 coinText.setText("0");
+                if (coinCountText != null) {
+                    coinCountText.setText("0");
+                }
             }
         });
+
+        // ✅ EXP 불러오기 (마스터 브랜치에서 추가)
+        if (expText != null) {
+            DatabaseReference expRef = FirebaseDatabase.getInstance()
+                    .getReference("Users").child(uid).child("exp");
+
+            expRef.get().addOnSuccessListener(snapshot -> {
+                int exp = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
+                expText.setText(exp + "/200");
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "EXP 불러오기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                expText.setText("0/200");
+            });
+        }
     }
 
     private void checkBearState() {

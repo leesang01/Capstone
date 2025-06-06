@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 🍃 배경 이미지 -->
+    <!-- 파란테마: 배경 이미지 -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/bg_forest" />
 
-    <!-- 🛍️ 상점 내용 -->
+    <!-- 남아있는 상점 내용 -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,7 +24,7 @@
             android:padding="24dp"
             android:elevation="6dp">
 
-            <!-- 🛒 제목 -->
+            <!-- 상점 제목 -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="24dp" />
 
-            <!-- 📦 아이템 목록 -->
+            <!-- 아이템 목록 -->
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,8 +43,10 @@
                 android:alignmentMode="alignMargins"
                 android:useDefaultMargins="true">
 
-                <!-- 🎩 귀여운 모자 -->
+                <!-- 규용우를 복무하며 -->
+                <!-- 가방 모달 -->
                 <LinearLayout
+                    android:id="@+id/item_hat"
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -66,7 +68,6 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp" />
 
-                    <!-- 코인 표시 -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -89,6 +90,7 @@
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/btnBuyHat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="구매"
@@ -96,8 +98,9 @@
                         android:backgroundTint="@color/green" />
                 </LinearLayout>
 
-                <!-- 👕 곰 티셔츠 -->
+                <!-- 곰 티셔츠 -->
                 <LinearLayout
+                    android:id="@+id/item_shirt"
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -141,6 +144,7 @@
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/btnBuyShirt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="구매"
@@ -148,8 +152,9 @@
                         android:backgroundTint="@color/green" />
                 </LinearLayout>
 
-                <!-- 🍯 꿀통 -->
+                <!-- 깔통 -->
                 <LinearLayout
+                    android:id="@+id/item_honey"
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -193,6 +198,7 @@
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/btnBuyHoney"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="구매"
@@ -200,8 +206,9 @@
                         android:backgroundTint="@color/green" />
                 </LinearLayout>
 
-                <!-- 🗝️ 레벨업 키 -->
+                <!-- 레벨업 키 -->
                 <LinearLayout
+                    android:id="@+id/item_key"
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -245,6 +252,7 @@
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/btnBuyKey"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="구매"
@@ -253,7 +261,7 @@
                 </LinearLayout>
             </GridLayout>
 
-            <!-- 📦 보관함으로 이동 버튼 -->
+            <!-- 보관함 이동 버튼 -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_go_to_inventory"
                 android:layout_width="match_parent"
@@ -267,7 +275,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 🔙 뒤로가기 버튼 -->
+    <!-- 뒤로가기 버튼 -->
     <ImageView
         android:id="@+id/btn_back"
         android:layout_width="40dp"

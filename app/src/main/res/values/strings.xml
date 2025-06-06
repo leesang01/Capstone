@@ -5,7 +5,11 @@
     <string name="btn_add">추가</string>
     <string name="btn_delete">삭제</string>
 
-    <!-- 🔹 Google 로그인용 클라이언트 ID 추가 -->
-    <string name="default_web_client_id"><string name="default_web_client_id">1234567890-abc123def456.apps.googleusercontent.com</string>
-</string>
+    <!-- 🔹 Google 로그인용 클라이언트 ID -->
+    <string name="default_web_client_id">1234567890-abc123def456.apps.googleusercontent.com</string>
+
+    <!-- 🧭 보관함 관련 추가 -->
+    <string name="title_inventory">내 보관함</string>
+    <string name="back">뒤로가기</string>
+    <string name="bg_forest_description">배경 이미지</string>
 </resources>

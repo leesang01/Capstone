@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 🌲 배경 이미지 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_forest"
+        android:contentDescription="@string/bg_forest_description" />
+
+    <!-- 🏷️ 제목 (흰 박스 위로 이동) -->
+    <TextView
+        android:id="@+id/title_inventory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_inventory"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/darkGreen"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="72dp"
+        android:elevation="10dp" />
+
+    <!-- 📦 보관함 내용 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="120dp"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/inventoryContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="500dp"
+            android:orientation="vertical"
+            android:background="@drawable/shop_panel_background"
+            android:padding="24dp"
+            android:layout_marginBottom="32dp"
+            android:elevation="6dp">
+
+            <!-- 아이템은 Java 코드에서 동적으로 추가됩니다 -->
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 🔙 뒤로가기 버튼 -->
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start|top"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_back"
+        android:contentDescription="@string/back"
+        android:scaleType="fitCenter"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="10dp" />
+
+</FrameLayout>

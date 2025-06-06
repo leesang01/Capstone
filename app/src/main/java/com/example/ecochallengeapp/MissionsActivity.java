@@ -13,9 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 
 import java.util.*;
 
@@ -42,7 +40,7 @@ public class MissionsActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            Toast.makeText(this, "\uB85C\uADF8\uC778\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
@@ -94,12 +92,12 @@ public class MissionsActivity extends AppCompatActivity {
             if (now - lastRefresh >= interval) {
                 prefs.edit().putLong("lastRefreshTime", now).apply();
                 refreshMissions();
-                Toast.makeText(this, "\uBBF8\uC158\uC774 \uC0C8\uB85C\uACE0\uCE68\uB418\uC5C8\uC2B5\uB2C8\uB2E4!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "미션이 새로고침되었습니다!", Toast.LENGTH_SHORT).show();
             } else {
                 long remainMillis = interval - (now - lastRefresh);
                 long hours = remainMillis / (1000 * 60 * 60);
                 long minutes = (remainMillis / (1000 * 60)) % 60;
-                Toast.makeText(this, "\uC0C8\uB85C\uACE0\uCE68\uAE4C\uC9C0 " + hours + "\uC2DC\uAC04 " + minutes + "\uBD84 \uB0A8\uC558\uC2B5\uB2C8\uB2E4.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "새로고침까지 " + hours + "시간 " + minutes + "분 남았습니다.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -136,27 +134,31 @@ public class MissionsActivity extends AppCompatActivity {
                 completed.add(snap.getKey());
             }
 
-            List<Mission> selected = new ArrayList<>(Arrays.asList(null, null, null, null));
             List<Mission> available = new ArrayList<>();
-            int index = 0;
-
             for (Mission m : allMissions) {
-                if (completed.contains(m.getTitle())) {
-                    if (index < 4) selected.set(index++, m);
-                }
-            }
-
-            for (Mission m : allMissions) {
-                if (!completed.contains(m.getTitle()) && !selected.contains(m)) {
+                if (!completed.contains(m.getTitle())) {
                     available.add(m);
                 }
             }
 
+            List<Mission> selected = new ArrayList<>();
             Collections.shuffle(available);
-            int availIndex = 0;
-            for (int i = 0; i < 4; i++) {
-                if (selected.get(i) == null && availIndex < available.size()) {
-                    selected.set(i, available.get(availIndex++));
+
+            if (available.size() >= 4) {
+                for (int i = 0; i < 4; i++) {
+                    selected.add(available.get(i));
+                }
+            } else {
+                selected.addAll(available);
+                List<Mission> completedList = new ArrayList<>();
+                for (Mission m : allMissions) {
+                    if (completed.contains(m.getTitle()) && !selected.contains(m)) {
+                        completedList.add(m);
+                    }
+                }
+                Collections.shuffle(completedList);
+                for (int i = 0; selected.size() < 4 && i < completedList.size(); i++) {
+                    selected.add(completedList.get(i));
                 }
             }
 
@@ -172,28 +174,6 @@ public class MissionsActivity extends AppCompatActivity {
         bindMissionToView(mission4, missionTitle4, coinText4, completeText4, coinLayout4, missionImage4, missions.get(3));
     }
 
-    private void saveSelectedMissionsToPrefs(List<Mission> missions) {
-        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        for (int i = 0; i < missions.size(); i++) {
-            editor.putString("mission_title_" + i, missions.get(i).getTitle());
-            editor.putInt("mission_coin_" + i, missions.get(i).getCoin());
-        }
-        editor.apply();
-    }
-
-    private List<Mission> loadSelectedMissionsFromPrefs() {
-        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-        List<Mission> result = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            String title = prefs.getString("mission_title_" + i, null);
-            int coin = prefs.getInt("mission_coin_" + i, -1);
-            if (title == null || coin == -1) return null;
-            result.add(new Mission(title, coin));
-        }
-        return result;
-    }
-
     private void bindMissionToView(LinearLayout layout, TextView title, TextView coinText,
                                    TextView completeText, LinearLayout coinLayout,
                                    ImageView iconView, Mission mission) {
@@ -201,6 +181,7 @@ public class MissionsActivity extends AppCompatActivity {
             layout.setVisibility(View.GONE);
             return;
         }
+
         layout.setVisibility(View.VISIBLE);
         title.setText(mission.getTitle());
         coinText.setText(String.valueOf(mission.getCoin()));
@@ -242,6 +223,28 @@ public class MissionsActivity extends AppCompatActivity {
         iconMap.put("재활용 분리배출", R.drawable.ic_recycle);
         Integer resId = iconMap.get(title);
         return resId != null ? resId : R.drawable.ic_coin;
+    }
+
+    private void saveSelectedMissionsToPrefs(List<Mission> missions) {
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        for (int i = 0; i < missions.size(); i++) {
+            editor.putString("mission_title_" + i, missions.get(i).getTitle());
+            editor.putInt("mission_coin_" + i, missions.get(i).getCoin());
+        }
+        editor.apply();
+    }
+
+    private List<Mission> loadSelectedMissionsFromPrefs() {
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        List<Mission> result = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            String title = prefs.getString("mission_title_" + i, null);
+            int coin = prefs.getInt("mission_coin_" + i, -1);
+            if (title == null || coin == -1) return null;
+            result.add(new Mission(title, coin));
+        }
+        return result;
     }
 
     private void openCameraActivity(int coinValue, String missionId) {

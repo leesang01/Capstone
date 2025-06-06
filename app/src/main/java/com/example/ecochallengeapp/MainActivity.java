@@ -27,28 +27,19 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    // 🐻 기존 백업 브랜치의 변수들
     private ImageView bearImage;
     private TextView coinText;
     private TextView speechBubbleText;
+    private TextView expText;
     private DatabaseReference userRef;
     private String uid;
 
-    // 🔹 마스터 브랜치에서 추가된 변수들
-    private TextView coinCountText;
-    private TextView expText; // ✅ 추가된 EXP 텍스트뷰 참조
-
-    // 곰의 감정 상태
     private static enum BearState {
-        HAPPY,    // 기본 상태
-        SAD,      // 24시간 미션 안함
-        ANGRY     // 3일 이상 미션 안함
+        HAPPY, SAD, ANGRY
     }
 
-    // 터치 상호작용 상태
     private static enum TouchState {
-        HAPPY,     // 평상시 대화 (happy 이미지)
-        SURPRISED  // 놀란 반응 (greeting 이미지)
+        HAPPY, SURPRISED
     }
 
     private BearState currentBearState = BearState.HAPPY;
@@ -60,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Firebase 사용자 확인
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -77,16 +67,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        // 🐻 기존 백업 브랜치의 뷰 연결
         bearImage = findViewById(R.id.bear_image);
         coinText = findViewById(R.id.coin_text);
         speechBubbleText = findViewById(R.id.speechBubbleText);
-        
-        // 🔹 마스터 브랜치에서 추가된 텍스트뷰 연결
-        coinCountText = findViewById(R.id.coinCount);
-        expText = findViewById(R.id.expText); // ✅ EXP 텍스트뷰도 연결
+        expText = findViewById(R.id.expText);
 
-        // 🐻 곰 클릭 이벤트
         bearImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,31 +79,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 기존 하단 메뉴 버튼들 (백업 브랜치에서 유지)
-        findViewById(R.id.btn_missions).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToMissions();
-            }
-        });
-        findViewById(R.id.btn_community).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCommunity();
-            }
-        });
-        findViewById(R.id.btn_shop).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToShop();
-            }
-        });
-        findViewById(R.id.btn_home).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSpeechBubble("🏠 이미 홈 화면이야!");
-            }
-        });
+        findViewById(R.id.btn_missions).setOnClickListener(v -> goToMissions());
+        findViewById(R.id.btn_community).setOnClickListener(v -> goToCommunity());
+        findViewById(R.id.btn_shop).setOnClickListener(v -> goToShop());
+        findViewById(R.id.btn_home).setOnClickListener(v -> showSpeechBubble("🏠 이미 홈 화면이야!"));
     }
 
     public void goToMissions() {
@@ -134,32 +98,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        // 🔹 코인 불러오기 (기존 방식 유지)
         userRef.child("coin").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int coin = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
                 coinText.setText(String.valueOf(coin));
-                
-                // 🔹 coinCountText가 존재하면 업데이트
-                if (coinCountText != null) {
-                    coinCountText.setText(String.valueOf(coin));
-                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 coinText.setText("0");
-                if (coinCountText != null) {
-                    coinCountText.setText("0");
-                }
             }
         });
 
-        // ✅ EXP 불러오기 (마스터 브랜치에서 추가)
         if (expText != null) {
-            DatabaseReference expRef = FirebaseDatabase.getInstance()
-                    .getReference("Users").child(uid).child("exp");
+            DatabaseReference expRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("exp");
 
             expRef.get().addOnSuccessListener(snapshot -> {
                 int exp = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
@@ -201,25 +154,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private long calculateDaysSince(String dateString) {
-        if (dateString == null) {
-            return 7;
-        }
+        if (dateString == null) return 7;
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             Date lastDate = sdf.parse(dateString);
             Date currentDate = new Date();
-
-            long diffInMillis = currentDate.getTime() - lastDate.getTime();
-            return TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            long diff = currentDate.getTime() - lastDate.getTime();
+            return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             return 7;
         }
     }
 
-    // 🐻 곰 클릭 이벤트
     private void onBearClicked() {
-        // 터치 상태 랜덤 변경 (50% 확률)
         if (random.nextBoolean()) {
             currentTouchState = TouchState.SURPRISED;
             bearImage.setImageResource(R.drawable.bear_greeting);
@@ -231,33 +179,22 @@ public class MainActivity extends AppCompatActivity {
         String message = getTouchMessage();
         showSpeechBubble(message);
 
-        // 곰 클릭 시 작은 애니메이션 효과
         bearImage.animate()
                 .scaleX(1.1f)
                 .scaleY(1.1f)
                 .setDuration(200)
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        bearImage.animate()
-                                .scaleX(1.0f)
-                                .scaleY(1.0f)
-                                .setDuration(200)
-                                .start();
+                .withEndAction(() -> {
+                    bearImage.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(200)
+                            .start();
 
-                        // 6초 후 원래 감정 상태로 복구 (시간 연장!)
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                setBearImageByState();
-                            }
-                        }, 6000); // 3000에서 6000으로 변경!
-                    }
+                    new Handler().postDelayed(this::setBearImageByState, 6000);
                 })
                 .start();
     }
 
-    // 감정 상태에 맞는 이미지 설정
     private void setBearImageByState() {
         switch (currentBearState) {
             case HAPPY:
@@ -272,16 +209,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // 터치 상태에 따른 메시지
     private String getTouchMessage() {
-        if (currentTouchState == TouchState.SURPRISED) {
-            return getSurprisedMessage();
-        } else {
-            return getBearMessage();
-        }
+        return currentTouchState == TouchState.SURPRISED ? getSurprisedMessage() : getBearMessage();
     }
 
-    // 놀란 반응 메시지
     private String getSurprisedMessage() {
         String[] surprisedMessages = {
                 "🐻😮 깜짝이야! 갑자기 만져서 놀랐잖아!",
@@ -298,11 +229,10 @@ public class MainActivity extends AppCompatActivity {
         return surprisedMessages[random.nextInt(surprisedMessages.length)];
     }
 
-    // 감정 상태에 따른 기본 메시지
     private String getBearMessage() {
         switch (currentBearState) {
             case HAPPY:
-                String[] happyMessages = {
+                String[] happy = {
                         "🐻 안녕! 오늘도 환경을 위해 노력해줘서 고마워!",
                         "🌱 너와 함께하니까 지구가 더 건강해지는 것 같아!",
                         "✨ 오늘도 멋진 하루 보내자!",
@@ -310,32 +240,28 @@ public class MainActivity extends AppCompatActivity {
                         "💚 네가 하는 작은 실천들이 큰 변화를 만들어!",
                         "🌍 지구가 너에게 고마워하고 있어!"
                 };
-                return happyMessages[random.nextInt(happyMessages.length)];
-
+                return happy[random.nextInt(happy.length)];
             case SAD:
-                String[] sadMessages = {
+                String[] sad = {
                         "🐻💧 어제 미션을 못했구나... 괜찮아, 오늘부터 다시 시작하자!",
                         "😢 조금 아쉽지만 포기하지 말고 다시 도전해보자!",
                         "🌧️ 가끔은 쉬는 것도 필요해. 오늘은 작은 것부터 시작해볼까?",
                         "💙 네가 다시 돌아와줘서 기뻐! 함께 환경을 지켜나가자!"
                 };
-                return sadMessages[random.nextInt(sadMessages.length)];
-
+                return sad[random.nextInt(sad.length)];
             case ANGRY:
-                String[] angryMessages = {
+                String[] angry = {
                         "🐻💢 이봐! 벌써 3일이나 미션을 안 했어! 지구가 울고 있다구!",
                         "😤 환경 보호는 매일매일이 중요해! 오늘부터라도 다시 시작하자!",
                         "⚡ 미션을 너무 오래 안 했어... 지금이라도 하나씩 해보자!",
                         "🔥 3일 동안 뭘 했던 거야?! 지구를 구하는 건 미룰 수 없어!"
                 };
-                return angryMessages[random.nextInt(angryMessages.length)];
-
+                return angry[random.nextInt(angry.length)];
             default:
                 return "🐻 안녕!";
         }
     }
 
-    // 말풍선 표시 함수
     private void showSpeechBubble(String message) {
         if (speechBubbleText == null) {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
@@ -351,23 +277,17 @@ public class MainActivity extends AppCompatActivity {
                 .setDuration(500)
                 .start();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (speechBubbleText != null) {
-                    speechBubbleText.animate()
-                            .alpha(0f)
-                            .setDuration(500)
-                            .withEndAction(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (speechBubbleText != null) {
-                                        speechBubbleText.setVisibility(View.GONE);
-                                    }
-                                }
-                            })
-                            .start();
-                }
+        new Handler().postDelayed(() -> {
+            if (speechBubbleText != null) {
+                speechBubbleText.animate()
+                        .alpha(0f)
+                        .setDuration(500)
+                        .withEndAction(() -> {
+                            if (speechBubbleText != null) {
+                                speechBubbleText.setVisibility(View.GONE);
+                            }
+                        })
+                        .start();
             }
         }, 4000);
     }

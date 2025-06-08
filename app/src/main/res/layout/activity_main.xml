@@ -55,7 +55,7 @@
         android:layout_marginTop="40dp"
         android:layout_alignParentTop="true" />
 
-    <!-- ✅ EXP 박스 (control 브랜치 기준) -->
+    <!-- ✅ EXP 박스 (EXP 글자 제거, 가운데 정렬된 0/200만 표시) -->
     <FrameLayout
         android:id="@+id/expBox"
         android:layout_width="220dp"

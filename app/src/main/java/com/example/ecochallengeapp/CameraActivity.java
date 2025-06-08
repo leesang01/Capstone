@@ -35,9 +35,8 @@ public class CameraActivity extends AppCompatActivity {
     private Uri photoUri;
     private String currentPhotoPath;
 
-    private int rewardCoin = 10;
-    private String missionId = "";
-    private String missionTitle = "";
+    private int rewardCoin = 10; // 기본값
+    private String missionId = ""; // 미션 ID 값
 
     private String uid;
 
@@ -46,6 +45,7 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        // 로그인한 사용자 ID 가져오기
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
@@ -54,28 +54,24 @@ public class CameraActivity extends AppCompatActivity {
         }
         uid = user.getUid();
 
+        // 인텐트로부터 코인 보상 및 미션 ID 받아오기
         rewardCoin = getIntent().getIntExtra("rewardCoin", 10);
         missionId = getIntent().getStringExtra("missionId");
-        missionTitle = getIntent().getStringExtra("missionTitle");
 
+        // 촬영 버튼
         Button captureButton = findViewById(R.id.btnCapture);
         captureButton.setOnClickListener(v -> checkCameraPermissionAndOpenCamera());
 
+        // 취소 버튼
         Button cancelButton = findViewById(R.id.btnCancel);
         cancelButton.setOnClickListener(v -> finish());
     }
 
     private void checkCameraPermissionAndOpenCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    }, REQUEST_CAMERA_PERMISSION);
+                    new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
         } else {
             dispatchTakePictureIntent();
         }
@@ -87,10 +83,11 @@ public class CameraActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakePictureIntent();
             } else {
-                Toast.makeText(this, "카메라 및 저장소 권한이 필요합니다", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "카메라 권한이 필요합니다", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -138,11 +135,7 @@ public class CameraActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            if (currentPhotoPath == null || !(new File(currentPhotoPath).exists())) {
-                Toast.makeText(this, "사진 저장에 실패했습니다", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
+            // ✅ 미션 수행 날짜 저장 (곰돌이 표정 변경용)
             String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             FirebaseDatabase.getInstance().getReference("Users")
                     .child(uid)
@@ -153,7 +146,6 @@ public class CameraActivity extends AppCompatActivity {
             intent.putExtra("photoPath", currentPhotoPath);
             intent.putExtra("rewardCoin", rewardCoin);
             intent.putExtra("missionId", missionId);
-            intent.putExtra("missionTitle", missionTitle);
             startActivity(intent);
             finish();
         } else {

@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView speechBubbleText;
     private TextView expText;
     private FrameLayout expBox;
-    private Button adminButton; // ✅ Button으로 변경됨
 
     private DatabaseReference userRef;
     private String uid;
@@ -46,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private final Random random = new Random();
 
     private static final int MAX_EXP = 200;
-    private static final String ADMIN_UID = "xpSjG4aOlFODFzQHCIvCYSxj42K2"; // ✅ 관리자 UID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +62,6 @@ public class MainActivity extends AppCompatActivity {
         initializeViews();
         loadUserData();
         checkEquipStatus();
-
-        // ✅ 관리자 계정일 때만 버튼 보이기
-        if (uid.equals(ADMIN_UID)) {
-            adminButton.setVisibility(View.VISIBLE);
-            adminButton.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, AdminApprovalActivity.class);
-                startActivity(intent);
-            });
-        } else {
-            adminButton.setVisibility(View.GONE);
-        }
     }
 
     private void initializeViews() {
@@ -85,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         speechBubbleText = findViewById(R.id.speechBubbleText);
         expText = findViewById(R.id.expText);
         expBox = findViewById(R.id.expBox);
-        adminButton = findViewById(R.id.adminButton); // ✅ Button으로 연결됨
 
         bearImage.setOnClickListener(v -> onBearClicked());
 

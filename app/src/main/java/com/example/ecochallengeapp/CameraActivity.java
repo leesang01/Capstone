@@ -17,6 +17,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -34,20 +38,31 @@ public class CameraActivity extends AppCompatActivity {
     private int rewardCoin = 10; // 기본값
     private String missionId = ""; // 미션 ID 값
 
+    private String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        // 📥 인텐트로부터 코인 보상 및 미션 ID 받아오기
+        // 로그인한 사용자 ID 가져오기
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        uid = user.getUid();
+
+        // 인텐트로부터 코인 보상 및 미션 ID 받아오기
         rewardCoin = getIntent().getIntExtra("rewardCoin", 10);
         missionId = getIntent().getStringExtra("missionId");
 
-        // 📸 촬영 버튼
+        // 촬영 버튼
         Button captureButton = findViewById(R.id.btnCapture);
         captureButton.setOnClickListener(v -> checkCameraPermissionAndOpenCamera());
 
-        // ❌ 취소 버튼
+        // 취소 버튼
         Button cancelButton = findViewById(R.id.btnCancel);
         cancelButton.setOnClickListener(v -> finish());
     }
@@ -120,10 +135,17 @@ public class CameraActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // ✅ 미션 수행 날짜 저장 (곰돌이 표정 변경용)
+            String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            FirebaseDatabase.getInstance().getReference("Users")
+                    .child(uid)
+                    .child("lastMissionDate")
+                    .setValue(today);
+
             Intent intent = new Intent(CameraActivity.this, PhotoUploadActivity.class);
             intent.putExtra("photoPath", currentPhotoPath);
-            intent.putExtra("rewardCoin", rewardCoin);   // 보상 코인 전달
-            intent.putExtra("missionId", missionId);     // 미션 ID 전달
+            intent.putExtra("rewardCoin", rewardCoin);
+            intent.putExtra("missionId", missionId);
             startActivity(intent);
             finish();
         } else {

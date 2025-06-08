@@ -11,11 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.*;
 
 public class ShopActivity extends AppCompatActivity {
 
@@ -35,57 +31,83 @@ public class ShopActivity extends AppCompatActivity {
             finish();
             return;
         }
+
         uid = user.getUid();
         userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid);
 
-        // 🔙 뒤로가기 버튼
+        // 🔙 뒤로가기 (Main으로 이동)
         ImageView btnBack = findViewById(R.id.btn_back);
         btnBack.setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         });
 
-        // ✅ 아이템 구매 버튼 처리
-        setBuyButton(R.id.btnBuyHat, "귀여운 모자", 100);
-        setBuyButton(R.id.btnBuyShirt, "곰 티셔츠", 100);
-        setBuyButton(R.id.btnBuyHoney, "꿀통", 20);
-        setBuyButton(R.id.btnBuyKey, "레벨업 키", 150);
+        // ✅ 구매 버튼 설정
+        setBuyButton(R.id.btnBuyHat, "hat", 100);
+        setBuyButton(R.id.btnBuyShirt, "shirt", 100);
+        setBuyButton(R.id.btnBuyHoney, "honey", 20);
+        setBuyButton(R.id.btnBuyKey, "key", 150);
 
-        // ✅ 보관함으로 이동
+        // 📦 보관함으로 이동
         findViewById(R.id.btn_go_to_inventory).setOnClickListener(v -> {
-            Intent intent = new Intent(this, InventoryActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(ShopActivity.this, InventoryActivity.class));
         });
     }
 
-    private void setBuyButton(int buttonId, String itemName, int price) {
+    // ✅ 아이템 구매 처리 (개수 누적 저장 + 코인 차감은 마지막에)
+    private void setBuyButton(int buttonId, String itemKey, int price) {
         Button buyBtn = findViewById(buttonId);
         buyBtn.setOnClickListener(v -> {
-            userRef.child("coin").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    Long currentCoin = snapshot.getValue(Long.class);
-                    if (currentCoin == null) currentCoin = 0L;
+            buyBtn.setEnabled(false); // 중복 클릭 방지
+
+            DatabaseReference itemRef = userRef.child("inventory").child(itemKey);
+            itemRef.get().addOnSuccessListener(itemSnap -> {
+                long currentCount = itemSnap.exists() ? itemSnap.getValue(Long.class) : 0L;
+
+                userRef.child("coin").get().addOnSuccessListener(coinSnap -> {
+                    long currentCoin = coinSnap.exists() ? coinSnap.getValue(Long.class) : 0L;
 
                     if (currentCoin >= price) {
-                        // 코인 차감
-                        long newCoin = currentCoin - price;
-                        userRef.child("coin").setValue(newCoin);
-
-                        // 보관함에 아이템 추가
-                        userRef.child("inventory").child(itemName).setValue(true);
-
-                        Toast.makeText(ShopActivity.this, itemName + "을(를) 구매했습니다!", Toast.LENGTH_SHORT).show();
+                        itemRef.setValue(currentCount + 1).addOnSuccessListener(aVoid -> {
+                            userRef.child("coin").setValue(currentCoin - price);
+                            Toast.makeText(this,
+                                    getItemName(itemKey) + "을(를) 구매했습니다!",
+                                    Toast.LENGTH_SHORT).show();
+                            buyBtn.setEnabled(true);
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(this, "아이템 저장 실패", Toast.LENGTH_SHORT).show();
+                            buyBtn.setEnabled(true);
+                        });
                     } else {
-                        Toast.makeText(ShopActivity.this, "코인이 부족합니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "코인이 부족합니다.", Toast.LENGTH_SHORT).show();
+                        buyBtn.setEnabled(true);
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    Toast.makeText(ShopActivity.this, "데이터를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show();
-                }
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(this, "코인 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    buyBtn.setEnabled(true);
+                });
+
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "아이템 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show();
+                buyBtn.setEnabled(true);
             });
         });
+    }
+
+    // ✅ 영어 key → 한글 이름
+    private String getItemName(String key) {
+        switch (key) {
+            case "hat":
+                return "귀여운 모자";
+            case "shirt":
+                return "곰 티셔츠";
+            case "honey":
+                return "꿀통";
+            case "key":
+                return "레벨업 키";
+            default:
+                return "알 수 없는 아이템";
+        }
     }
 }

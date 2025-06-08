@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,11 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,20 +29,22 @@ public class MainActivity extends AppCompatActivity {
     private TextView coinText;
     private TextView speechBubbleText;
     private TextView expText;
+    private View expFillView;
+    private FrameLayout expBox;
+
     private DatabaseReference userRef;
     private String uid;
 
-    private static enum BearState {
-        HAPPY, SAD, ANGRY
-    }
+    private boolean isWearingHat = false;
+    private boolean isWearingShirt = false;
+    private boolean isEvolved = false;
+    private boolean surprised = false;
 
-    private static enum TouchState {
-        HAPPY, SURPRISED
-    }
-
+    private enum BearState { HAPPY, SAD, ANGRY }
     private BearState currentBearState = BearState.HAPPY;
-    private TouchState currentTouchState = TouchState.HAPPY;
-    private Random random = new Random();
+    private final Random random = new Random();
+
+    private static final int MAX_EXP = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         initializeViews();
         loadUserData();
-        checkBearState();
+        checkEquipStatus();
     }
 
     private void initializeViews() {
@@ -71,96 +71,90 @@ public class MainActivity extends AppCompatActivity {
         coinText = findViewById(R.id.coin_text);
         speechBubbleText = findViewById(R.id.speechBubbleText);
         expText = findViewById(R.id.expText);
+        expFillView = findViewById(R.id.expFillView);
+        expBox = findViewById(R.id.expBox);
 
-        bearImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBearClicked();
-            }
-        });
+        bearImage.setOnClickListener(v -> onBearClicked());
 
         findViewById(R.id.btn_missions).setOnClickListener(v -> goToMissions());
         findViewById(R.id.btn_community).setOnClickListener(v -> goToCommunity());
         findViewById(R.id.btn_shop).setOnClickListener(v -> goToShop());
-        findViewById(R.id.btn_home).setOnClickListener(v -> showSpeechBubble("🏠 이미 홈 화면이야!"));
-    }
-
-    public void goToMissions() {
-        startActivity(new Intent(MainActivity.this, MissionsActivity.class));
-    }
-
-    public void goToCommunity() {
-        startActivity(new Intent(MainActivity.this, CommunityActivity.class));
-    }
-
-    public void goToShop() {
-        startActivity(new Intent(MainActivity.this, ShopActivity.class));
+        findViewById(R.id.btn_home).setOnClickListener(v -> {});
     }
 
     private void loadUserData() {
         userRef.child("coin").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int coin = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
                 coinText.setText(String.valueOf(coin));
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            @Override public void onCancelled(@NonNull DatabaseError error) {
                 coinText.setText("0");
             }
         });
 
-        if (expText != null) {
-            DatabaseReference expRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("exp");
-
-            expRef.get().addOnSuccessListener(snapshot -> {
+        userRef.child("exp").addValueEventListener(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int exp = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
-                expText.setText(exp + "/200");
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "EXP 불러오기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                expText.setText("0/200");
+                updateExpUI(exp);
+            }
+            @Override public void onCancelled(@NonNull DatabaseError error) {
+                updateExpUI(0);
+            }
+        });
+    }
+
+    private void updateExpUI(int currentExp) {
+        expText.setText(currentExp + "/" + MAX_EXP);
+        expBox.post(() -> {
+            int boxWidth = expBox.getWidth();
+            float ratio = currentExp / (float) MAX_EXP;
+            int fillWidth = (int)(ratio * boxWidth);
+            ViewGroup.LayoutParams params = expFillView.getLayoutParams();
+            params.width = fillWidth;
+            expFillView.setLayoutParams(params);
+        });
+    }
+
+    private void checkEquipStatus() {
+        userRef.child("isWearingHat").get().addOnSuccessListener(snap -> {
+            isWearingHat = snap.exists() && Boolean.TRUE.equals(snap.getValue(Boolean.class));
+            userRef.child("isWearingShirt").get().addOnSuccessListener(s -> {
+                isWearingShirt = s.exists() && Boolean.TRUE.equals(s.getValue(Boolean.class));
+                userRef.child("isEvolved").get().addOnSuccessListener(evo -> {
+                    isEvolved = evo.exists() && Boolean.TRUE.equals(evo.getValue(Boolean.class));
+                    checkBearState();
+                });
             });
-        }
+        });
     }
 
     private void checkBearState() {
         userRef.child("lastMissionDate").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String lastMissionDate = snapshot.getValue(String.class);
                 updateBearState(lastMissionDate);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            @Override public void onCancelled(@NonNull DatabaseError error) {
                 updateBearState(null);
             }
         });
     }
 
     private void updateBearState(String lastMissionDate) {
-        long daysSinceLastMission = calculateDaysSince(lastMissionDate);
-
-        if (daysSinceLastMission >= 3) {
-            currentBearState = BearState.ANGRY;
-        } else if (daysSinceLastMission >= 1) {
-            currentBearState = BearState.SAD;
-        } else {
-            currentBearState = BearState.HAPPY;
-        }
-
+        long daysSince = calculateDaysSince(lastMissionDate);
+        if (daysSince >= 3) currentBearState = BearState.ANGRY;
+        else if (daysSince >= 1) currentBearState = BearState.SAD;
+        else currentBearState = BearState.HAPPY;
         setBearImageByState();
     }
 
     private long calculateDaysSince(String dateString) {
         if (dateString == null) return 7;
-
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Date lastDate = sdf.parse(dateString);
-            Date currentDate = new Date();
-            long diff = currentDate.getTime() - lastDate.getTime();
+            Date last = sdf.parse(dateString);
+            long diff = new Date().getTime() - last.getTime();
             return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             return 7;
@@ -168,53 +162,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onBearClicked() {
-        if (random.nextBoolean()) {
-            currentTouchState = TouchState.SURPRISED;
-            bearImage.setImageResource(R.drawable.bear_greeting);
+        if (!surprised) {
+            surprised = true;
+            setBearImage("greeting");
+            showSpeechBubble(getSurprisedMessage());
         } else {
-            currentTouchState = TouchState.HAPPY;
+            surprised = false;
             setBearImageByState();
+            showSpeechBubble(getBearMessage());
         }
+    }
 
-        String message = getTouchMessage();
-        showSpeechBubble(message);
+    private void setBearImage(String emotion) {
+        String drawableName = "bear_";
+        if (isEvolved) drawableName += "evolved_";
+        drawableName += emotion;
 
-        bearImage.animate()
-                .scaleX(1.1f)
-                .scaleY(1.1f)
-                .setDuration(200)
-                .withEndAction(() -> {
-                    bearImage.animate()
-                            .scaleX(1.0f)
-                            .scaleY(1.0f)
-                            .setDuration(200)
-                            .start();
+        if (isWearingHat && isWearingShirt) drawableName += "_hat_shirt";
+        else if (isWearingHat) drawableName += "_hat";
+        else if (isWearingShirt) drawableName += "_shirt";
 
-                    new Handler().postDelayed(this::setBearImageByState, 6000);
-                })
-                .start();
+        int resId = getResources().getIdentifier(drawableName, "drawable", getPackageName());
+        if (resId != 0) {
+            bearImage.setImageResource(resId);
+        } else {
+            bearImage.setImageResource(R.drawable.bear_happy);
+        }
     }
 
     private void setBearImageByState() {
+        String emotion;
         switch (currentBearState) {
+            case SAD: emotion = "sad"; break;
+            case ANGRY: emotion = "angry"; break;
             case HAPPY:
-                bearImage.setImageResource(R.drawable.bear_happy);
-                break;
-            case SAD:
-                bearImage.setImageResource(R.drawable.bear_sad);
-                break;
-            case ANGRY:
-                bearImage.setImageResource(R.drawable.bear_angry);
-                break;
+            default: emotion = "happy"; break;
         }
-    }
-
-    private String getTouchMessage() {
-        return currentTouchState == TouchState.SURPRISED ? getSurprisedMessage() : getBearMessage();
+        setBearImage(emotion);
     }
 
     private String getSurprisedMessage() {
-        String[] surprisedMessages = {
+        String[] surprised = {
                 "🐻😮 깜짝이야! 갑자기 만져서 놀랐잖아!",
                 "😲 어? 뭐야뭐야? 왜 갑자기 터치했어?",
                 "🐻💫 앗! 깜빡 졸고 있었는데 깼네!",
@@ -226,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 "🐻💥 깜짝이야! 심장이 덜컥했네!",
                 "😮🌟 헉! 뭔가 재미있는 일이 생겼어?"
         };
-        return surprisedMessages[random.nextInt(surprisedMessages.length)];
+        return surprised[random.nextInt(surprised.length)];
     }
 
     private String getBearMessage() {
@@ -237,8 +225,7 @@ public class MainActivity extends AppCompatActivity {
                         "🌱 너와 함께하니까 지구가 더 건강해지는 것 같아!",
                         "✨ 오늘도 멋진 하루 보내자!",
                         "🎉 환경 보호 챔피언! 정말 자랑스러워!",
-                        "💚 네가 하는 작은 실천들이 큰 변화를 만들어!",
-                        "🌍 지구가 너에게 고마워하고 있어!"
+                        "💚 네가 하는 작은 실천들이 큰 변화를 만들어!"
                 };
                 return happy[random.nextInt(happy.length)];
             case SAD:
@@ -264,37 +251,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void showSpeechBubble(String message) {
         if (speechBubbleText == null) {
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return;
         }
 
         speechBubbleText.setText(message);
         speechBubbleText.setVisibility(View.VISIBLE);
-        speechBubbleText.setAlpha(0f);
-
-        speechBubbleText.animate()
-                .alpha(1f)
-                .setDuration(500)
-                .start();
+        speechBubbleText.setAlpha(1f);
 
         new Handler().postDelayed(() -> {
             if (speechBubbleText != null) {
-                speechBubbleText.animate()
-                        .alpha(0f)
-                        .setDuration(500)
-                        .withEndAction(() -> {
-                            if (speechBubbleText != null) {
-                                speechBubbleText.setVisibility(View.GONE);
-                            }
-                        })
-                        .start();
+                speechBubbleText.setVisibility(View.GONE);
             }
-        }, 4000);
+        }, 3000);
     }
+
+    public void goToMissions() { startActivity(new Intent(this, MissionsActivity.class)); }
+    public void goToCommunity() { startActivity(new Intent(this, CommunityActivity.class)); }
+    public void goToShop() { startActivity(new Intent(this, ShopActivity.class)); }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkBearState();
+        checkEquipStatus();
     }
 }

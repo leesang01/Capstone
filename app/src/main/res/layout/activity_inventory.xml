@@ -31,20 +31,17 @@
         android:layout_marginTop="120dp"
         android:padding="16dp">
 
+        <!-- ✅ 단일 LinearLayout로 변경 -->
         <LinearLayout
             android:id="@+id/inventoryContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="500dp"
             android:orientation="vertical"
             android:background="@drawable/shop_panel_background"
             android:padding="24dp"
             android:layout_marginBottom="32dp"
-            android:elevation="6dp">
-
-            <!-- 아이템은 Java 코드에서 동적으로 추가됩니다 -->
-
-        </LinearLayout>
+            android:elevation="6dp"
+            android:minHeight="500dp" />
     </ScrollView>
 
     <!-- 🔙 뒤로가기 버튼 -->

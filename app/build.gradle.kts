@@ -49,6 +49,9 @@ dependencies {
     // Kakao 로그인
     implementation("com.kakao.sdk:v2-user:2.18.0")
 
+    // ExifInterface (사진 회전 문제 해결용)
+    implementation("androidx.exifinterface:exifinterface:1.3.6")
+
     // 아래는 Kotlin 전용 라이브러리이므로 제거됨 ❌
     // implementation(libs.core.ktx)
 

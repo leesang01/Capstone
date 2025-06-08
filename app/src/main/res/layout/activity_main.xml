@@ -55,6 +55,7 @@
         android:layout_marginTop="40dp"
         android:layout_alignParentTop="true" />
 
+<<<<<<< HEAD
     <!-- ✅ 관리자 전용 버튼 (숨김, 제목 아래에 위치) -->
     <Button
         android:id="@+id/adminButton"
@@ -76,6 +77,15 @@
         android:layout_height="48dp"
         android:layout_below="@id/adminButton"
         android:layout_centerHorizontal="true"
+=======
+    <!-- ✅ EXP 박스 (EXP 글자 제거, 가운데 정렬된 0/200만 표시) -->
+    <FrameLayout
+        android:id="@+id/expBox"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+>>>>>>> control
         android:layout_marginTop="160dp">
 
         <LinearLayout
@@ -229,4 +239,5 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

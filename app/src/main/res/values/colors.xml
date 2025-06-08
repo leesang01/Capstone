@@ -4,4 +4,5 @@
     <color name="shopBackground">#E8F5E9</color>
     <color name="darkGreen">#2E7D32</color>
     <color name="green">#1B5E20</color> <!-- 버튼에 사용 -->
+    <color name="ic_launcher_background">#6CB524</color>
 </resources>

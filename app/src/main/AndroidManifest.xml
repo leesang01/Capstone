@@ -34,6 +34,23 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <!-- ✅ Kakao 네이티브 앱 키 meta-data -->
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_native_app_key" />
+
+        <!-- ✅ Kakao 로그인 Redirect 처리 액티비티 -->
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="kakaof47697762980405d27894a31572821fe" />
+            </intent-filter>
+        </activity>
+
         <!-- ✅ 앱 시작 액티비티 -->
         <activity android:name=".LoginActivity" android:exported="true">
             <intent-filter>

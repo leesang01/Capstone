@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;  // ✅ 수정됨
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView coinText;
     private TextView speechBubbleText;
     private TextView expText;
-    private View expFillView;
     private FrameLayout expBox;
+    private Button adminButton; // ✅ Button으로 변경됨
 
     private DatabaseReference userRef;
     private String uid;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private final Random random = new Random();
 
     private static final int MAX_EXP = 200;
+    private static final String ADMIN_UID = "xpSjG4aOlFODFzQHCIvCYSxj42K2"; // ✅ 관리자 UID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,17 @@ public class MainActivity extends AppCompatActivity {
         initializeViews();
         loadUserData();
         checkEquipStatus();
+
+        // ✅ 관리자 계정일 때만 버튼 보이기
+        if (uid.equals(ADMIN_UID)) {
+            adminButton.setVisibility(View.VISIBLE);
+            adminButton.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, AdminApprovalActivity.class);
+                startActivity(intent);
+            });
+        } else {
+            adminButton.setVisibility(View.GONE);
+        }
     }
 
     private void initializeViews() {
@@ -71,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
         coinText = findViewById(R.id.coin_text);
         speechBubbleText = findViewById(R.id.speechBubbleText);
         expText = findViewById(R.id.expText);
-        expFillView = findViewById(R.id.expFillView);
         expBox = findViewById(R.id.expBox);
+        adminButton = findViewById(R.id.adminButton); // ✅ Button으로 연결됨
 
         bearImage.setOnClickListener(v -> onBearClicked());
 
@@ -96,23 +108,11 @@ public class MainActivity extends AppCompatActivity {
         userRef.child("exp").addValueEventListener(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int exp = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
-                updateExpUI(exp);
+                expText.setText(exp + "/" + MAX_EXP);
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {
-                updateExpUI(0);
+                expText.setText("0/" + MAX_EXP);
             }
-        });
-    }
-
-    private void updateExpUI(int currentExp) {
-        expText.setText(currentExp + "/" + MAX_EXP);
-        expBox.post(() -> {
-            int boxWidth = expBox.getWidth();
-            float ratio = currentExp / (float) MAX_EXP;
-            int fillWidth = (int)(ratio * boxWidth);
-            ViewGroup.LayoutParams params = expFillView.getLayoutParams();
-            params.width = fillWidth;
-            expFillView.setLayoutParams(params);
         });
     }
 
@@ -183,11 +183,7 @@ public class MainActivity extends AppCompatActivity {
         else if (isWearingShirt) drawableName += "_shirt";
 
         int resId = getResources().getIdentifier(drawableName, "drawable", getPackageName());
-        if (resId != 0) {
-            bearImage.setImageResource(resId);
-        } else {
-            bearImage.setImageResource(R.drawable.bear_happy);
-        }
+        bearImage.setImageResource(resId != 0 ? resId : R.drawable.bear_happy);
     }
 
     private void setBearImageByState() {
@@ -209,31 +205,31 @@ public class MainActivity extends AppCompatActivity {
         switch (currentBearState) {
             case HAPPY:
                 String[] happy = {
-                        "\uD83D\uDC3B 안녕! 오늘도 환경을 위해 노력해줘서 고마워!",
-                        "\uD83C\uDF31 너와 함께하니까 지구가 더 건강해지는 것 같아!",
-                        "\u2728 오늘도 멋진 하루 보내자!",
-                        "\uD83C\uDF89 환경 보호 챔피언! 정말 자랑스러워!",
-                        "\uD83D\uDC9A 네가 하는 작은 실천들이 큰 변화를 만들어!"
+                        "🐻 안녕! 오늘도 환경을 위해 노력해줘서 고마워!",
+                        "🌱 너와 함께하니까 지구가 더 건강해지는 것 같아!",
+                        "✨ 오늘도 멋진 하루 보내자!",
+                        "🎉 환경 보호 챔피언! 정말 자랑스러워!",
+                        "💚 네가 하는 작은 실천들이 큰 변화를 만들어!"
                 };
                 return happy[random.nextInt(happy.length)];
             case SAD:
                 String[] sad = {
-                        "\uD83D\uDC3B\uD83D\uDC94 어제 미션을 못했구나... 괜찮아, 오늘부터 다시 시작하자!",
-                        "\uD83D\uDE22 조금 아쉽지만 포기하지 말고 다시 도전해보자!",
-                        "\uD83C\uDF27\uFE0F 가끔은 쉬는 것도 필요해. 오늘은 작은 것부터 시작해볼까?",
-                        "\uD83D\uDC99 네가 다시 돌아와줘서 기뻐! 함께 환경을 지켜나가자!"
+                        "🐻💔 어제 미션을 못했구나... 괜찮아, 오늘부터 다시 시작하자!",
+                        "😢 조금 아쉽지만 포기하지 말고 다시 도전해보자!",
+                        "🌧️ 가끔은 쉬는 것도 필요해. 오늘은 작은 것부터 시작해볼까?",
+                        "💙 네가 다시 돌아와줘서 기뻐! 함께 환경을 지켜나가자!"
                 };
                 return sad[random.nextInt(sad.length)];
             case ANGRY:
                 String[] angry = {
-                        "\uD83D\uDC3B\uD83D\uDCA2 이봐! 벌써 3일이나 미션을 안 했어! 지구가 울고 있다구!",
-                        "\uD83D\uDE24 환경 보호는 매일매일이 중요해! 오늘부터라도 다시 시작하자!",
-                        "\u26A1 미션을 너무 오래 안 했어... 지금이라도 하나씩 해보자!",
-                        "\uD83D\uDD25 3일 동안 뭘 했던 거야?! 지구를 구하는 건 미룰 수 없어!"
+                        "🐻💢 이봐! 벌써 3일이나 미션을 안 했어! 지구가 울고 있다구!",
+                        "😤 환경 보호는 매일매일이 중요해! 오늘부터라도 다시 시작하자!",
+                        "⚡ 미션을 너무 오래 안 했어... 지금이라도 하나씩 해보자!",
+                        "🔥 3일 동안 뭘 했던 거야?! 지구를 구하는 건 미룰 수 없어!"
                 };
                 return angry[random.nextInt(angry.length)];
             default:
-                return "\uD83D\uDC3B 안녕!";
+                return "🐻 안녕!";
         }
     }
 

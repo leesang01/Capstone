@@ -62,6 +62,9 @@
         <!-- ✅ 보관함 액티비티 추가 -->
         <activity android:name=".InventoryActivity" android:exported="true" />
 
+        <!-- ✅ 관리자 승인 화면 추가 -->
+        <activity android:name=".AdminApprovalActivity" android:exported="true" />
+
     </application>
 
 </manifest>

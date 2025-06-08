@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.*;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
@@ -18,7 +17,7 @@ import com.google.firebase.auth.*;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.common.model.ClientError;
 import com.kakao.sdk.common.model.ClientErrorCause;
-import com.kakao.sdk.auth.model.OAuthToken; // ✅ 추가된 import
+import com.kakao.sdk.auth.model.OAuthToken;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,8 +39,8 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // ✅ 버튼 참조
-        SignInButton googleLoginBtn = findViewById(R.id.btnGoogleLogin);
+        // ✅ 버튼 참조 (모두 Button으로 선언)
+        Button googleLoginBtn = findViewById(R.id.btnGoogleLogin);
         Button kakaoLoginBtn = findViewById(R.id.btnKakaoLogin);
 
         // ✅ Google 로그인
@@ -77,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         } else if (token != null) {
             Log.i("Kakao", "카카오 로그인 성공: " + token.getAccessToken());
-            // TODO: 로그인 성공 후 화면 이동 or Firebase 연동
+            // TODO: 로그인 성공 후 처리
         }
     }
 

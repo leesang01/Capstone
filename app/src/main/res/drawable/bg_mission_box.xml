@@ -1,4 +1,4 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#D0E8C1"/> <!-- 연한 초록색 -->
-    <corners android:radius="24dp"/> <!-- 둥근 모서리 -->
+    <solid android:color="#D0E8C1" android:alpha="0.85"/> <!-- 배경에 약간 투명도 추가 -->
+    <corners android:radius="24dp"/>
 </shape>

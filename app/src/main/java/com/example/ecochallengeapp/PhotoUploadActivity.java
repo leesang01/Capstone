@@ -1,7 +1,10 @@
 package com.example.ecochallengeapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,12 +13,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
+import com.google.firebase.storage.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class PhotoUploadActivity extends AppCompatActivity {
 
@@ -25,28 +33,37 @@ public class PhotoUploadActivity extends AppCompatActivity {
     private String photoPath;
     private int rewardCoin;
     private String missionId;
+    private String missionTitle;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_upload);
 
-        // 📌 뷰 연결
         imagePreview = findViewById(R.id.imagePreview);
         coinMessage = findViewById(R.id.coinMessage);
         btnSubmit = findViewById(R.id.btnSubmit);
         btnGoHome = findViewById(R.id.btnGoHome);
 
-        // 📥 인텐트 데이터 수신
         photoPath = getIntent().getStringExtra("photoPath");
         rewardCoin = getIntent().getIntExtra("rewardCoin", 10);
         missionId = getIntent().getStringExtra("missionId");
+        missionTitle = getIntent().getStringExtra("missionTitle");
 
-        // 📷 사진 미리보기
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "로그인이 필요합니다", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        uid = user.getUid();
+
         if (photoPath != null) {
             File imgFile = new File(photoPath);
             if (imgFile.exists()) {
-                imagePreview.setImageBitmap(BitmapFactory.decodeFile(photoPath));
+                Bitmap rotatedBitmap = rotateImageIfRequired(photoPath);
+                imagePreview.setImageBitmap(rotatedBitmap);
             } else {
                 Toast.makeText(this, "사진 파일이 존재하지 않습니다", Toast.LENGTH_SHORT).show();
             }
@@ -54,62 +71,109 @@ public class PhotoUploadActivity extends AppCompatActivity {
             Toast.makeText(this, "사진 경로가 전달되지 않았습니다", Toast.LENGTH_SHORT).show();
         }
 
-        // 🟢 인증하기 버튼 클릭 처리
-        btnSubmit.setOnClickListener(v -> giveCoinToUser(rewardCoin));
-
-        // 🏠 메인으로 이동 버튼
+        btnSubmit.setOnClickListener(v -> uploadPhotoAndReward());
         btnGoHome.setOnClickListener(v -> {
-            Intent intent = new Intent(PhotoUploadActivity.this, MainActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(PhotoUploadActivity.this, MainActivity.class));
             finish();
         });
     }
 
-    /**
-     * ✅ Firebase에 코인 지급 및 완료 미션 저장
-     */
-    private void giveCoinToUser(int coinAmount) {
-        // 🔑 실제 로그인된 사용자 UID 가져오기
-        String uid = FirebaseAuth.getInstance().getCurrentUser() != null
-                ? FirebaseAuth.getInstance().getCurrentUser().getUid()
-                : null;
+    private Bitmap rotateImageIfRequired(String imagePath) {
+        try {
+            ExifInterface exif = new ExifInterface(imagePath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
-        if (uid == null) {
-            Toast.makeText(this, "로그인이 필요합니다", Toast.LENGTH_SHORT).show();
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    return rotateBitmap(bitmap, 90);
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    return rotateBitmap(bitmap, 180);
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    return rotateBitmap(bitmap, 270);
+                default:
+                    return bitmap;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return BitmapFactory.decodeFile(imagePath);
+        }
+    }
+
+    private Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    private void uploadPhotoAndReward() {
+        File file = new File(photoPath);
+        if (!file.exists()) {
+            Toast.makeText(this, "사진 파일이 없습니다", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+        Uri fileUri = Uri.fromFile(file); // Android 8 이하 대응용
+        String fileName = "photo_" + System.currentTimeMillis() + ".jpg";
 
-        // 🔹 현재 코인 불러오기
+        StorageReference storageRef = FirebaseStorage.getInstance()
+                .getReference("photos/" + uid + "/" + fileName);
+
+        storageRef.putFile(fileUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        savePhotoDataToDatabase(uri.toString());
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(this, "URL 가져오기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "사진 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void savePhotoDataToDatabase(String imageUrl) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         DatabaseReference coinRef = userRef.child("coin");
+        DatabaseReference photosRef = FirebaseDatabase.getInstance().getReference("Photos");
+
+        String photoId = photosRef.push().getKey();
+        if (photoId != null) {
+            Map<String, Object> photoData = new HashMap<>();
+            photoData.put("imageUrl", imageUrl);
+            photoData.put("status", "pending");
+            photoData.put("userId", uid);
+            photoData.put("missionId", missionId);
+            photoData.put("missionTitle", missionTitle);
+            photosRef.child(photoId).setValue(photoData);
+        }
+
         coinRef.get().addOnSuccessListener(snapshot -> {
             int currentCoin = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
-            int updatedCoin = currentCoin + coinAmount;
+            int updatedCoin = currentCoin + rewardCoin;
 
-            // 🔹 코인 업데이트
             coinRef.setValue(updatedCoin).addOnSuccessListener(unused -> {
-                String message = coinAmount + "코인을 획득하셨습니다!";
-                coinMessage.setText(message);
+                coinMessage.setText(rewardCoin + "코인을 획득하셨습니다!");
                 coinMessage.setVisibility(View.VISIBLE);
-
-                // ✅ 인증 완료 UI 변경
                 btnSubmit.setText("인증 완료");
                 btnSubmit.setEnabled(false);
                 btnGoHome.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, rewardCoin + "코인 지급 완료!", Toast.LENGTH_SHORT).show();
 
-                // ✅ 완료된 미션 Firebase에 저장
                 if (missionId != null) {
-                    DatabaseReference completedRef = userRef.child("completedMissions").child(missionId);
-                    completedRef.setValue(true);
+                    userRef.child("completedMissions").child(missionId).setValue(true);
                 }
+
+                String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                userRef.child("lastMissionDate").setValue(today);
+
             }).addOnFailureListener(e -> {
-                Toast.makeText(getApplicationContext(), "코인 지급 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "코인 저장 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
             });
         }).addOnFailureListener(e -> {
-            Toast.makeText(getApplicationContext(), "데이터 불러오기 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "코인 조회 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
         });
     }
 }

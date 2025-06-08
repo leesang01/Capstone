@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 배경 이미지 -->
+    <!-- 🌲 배경 이미지 -->
     <ImageView
         android:id="@+id/bg"
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- 제목 -->
+    <!-- 🐻 앱 제목 -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -55,32 +55,48 @@
         android:layout_marginTop="40dp"
         android:layout_alignParentTop="true" />
 
-    <!-- Logout -->
-    <LinearLayout
-        android:id="@+id/btn_logout"
-        android:layout_width="37dp"
-        android:layout_height="45dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+    <!-- ✅ 관리자 전용 버튼 (숨김, 제목 아래에 위치) -->
+    <Button
+        android:id="@+id/adminButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:text="관리자 전용"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2E7D32"
+        android:visibility="gone" />
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:contentDescription="Logout Icon"
-            android:src="@drawable/ic_logout" />
-    </LinearLayout>
+    <!-- ✅ EXP 박스 -->
+    <FrameLayout
+        android:id="@+id/expBox"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/adminButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="160dp">
 
-    <!-- 🎈 간단한 말풍선 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@drawable/bg_mission_box"
+            android:elevation="8dp">
+
+            <TextView
+                android:id="@+id/expText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/200"
+                android:textColor="#2E7D32"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- 💬 말풍선 -->
     <TextView
         android:id="@+id/speechBubbleText"
         android:layout_width="wrap_content"
@@ -89,7 +105,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:background="@drawable/speech_bubble_bg"
-        android:text="🐻 안녕! 나를 클릭해봐!"
+        android:text="🐻 안녕! 나를 클릭해보아!"
         android:textColor="#2E7D32"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -98,41 +114,6 @@
         android:gravity="center"
         android:elevation="8dp"
         android:visibility="gone" />
-
-    <!-- ✅ EXP 표시 박스 -->
-    <LinearLayout
-        android:id="@+id/expBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bear_image"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_mission_box"
-        android:padding="8dp"
-        android:elevation="6dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/expLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="EXP"
-            android:textStyle="bold"
-            android:textColor="#000"
-            android:background="#FFEB3B"
-            android:padding="4dp"
-            android:layout_marginEnd="12dp"/>
-
-        <TextView
-            android:id="@+id/expText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0/200"
-            android:textColor="#2E7D32"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
 
     <!-- 🐻 곰 캐릭터 -->
     <ImageView
@@ -148,7 +129,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="곰 캐릭터 - 클릭해서 대화하기" />
 
-    <!-- 하단 메뉴 -->
+    <!-- 📱 하단 메뉴 -->
     <LinearLayout
         android:id="@+id/bottomMenu"
         android:layout_width="match_parent"

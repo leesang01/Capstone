@@ -46,8 +46,8 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // ✅ 버튼 참조
-        SignInButton googleLoginBtn = findViewById(R.id.btnGoogleLogin);
+        // ✅ 버튼 참조 (타입 캐스팅 에러 수정!)
+        Button googleLoginBtn = findViewById(R.id.btnGoogleLogin); // 👈 SignInButton → Button으로 변경
         Button kakaoLoginBtn = findViewById(R.id.btnKakaoLogin);
 
         // ✅ Google 로그인
@@ -64,10 +64,20 @@ public class LoginActivity extends AppCompatActivity {
         // 로그인 버튼 클릭 이벤트
         Button btnKakao = findViewById(R.id.btnKakaoLogin);
         btnKakao.setOnClickListener(v -> {
-            if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(this)) {
-                UserApiClient.getInstance().loginWithKakaoTalk(this, kakaoCallback);
-            } else {
-                UserApiClient.getInstance().loginWithKakaoAccount(this, kakaoCallback);
+            Log.d("KAKAO_LOGIN", "카카오 로그인 버튼 클릭됨");
+
+            // 👈 카카오 SDK 초기화 상태 확인
+            try {
+                if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(this)) {
+                    Log.d("KAKAO_LOGIN", "카카오톡으로 로그인 시도");
+                    UserApiClient.getInstance().loginWithKakaoTalk(this, kakaoCallback);
+                } else {
+                    Log.d("KAKAO_LOGIN", "카카오계정으로 로그인 시도");
+                    UserApiClient.getInstance().loginWithKakaoAccount(this, kakaoCallback);
+                }
+            } catch (Exception e) {
+                Log.e("KAKAO_LOGIN", "로그인 시도 중 예외 발생", e);
+                Toast.makeText(this, "카카오 로그인 초기화 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -75,8 +85,14 @@ public class LoginActivity extends AppCompatActivity {
     // Kakao 로그인 콜백
     private final Function2<OAuthToken, Throwable, Unit> kakaoCallback = (token, error) -> {
         if (error != null) {
-            Log.e("KAKAO_LOGIN", "로그인 실패", error);
-            Toast.makeText(this, "카카오 로그인 실패", Toast.LENGTH_SHORT).show();
+            // 👈 사용자 취소와 다른 에러 구분
+            if (error instanceof ClientError && ((ClientError) error).getReason() == ClientErrorCause.Cancelled) {
+                Log.i("KAKAO_LOGIN", "사용자가 로그인을 취소했습니다.");
+                // Toast 안 띄우기 (취소는 정상 동작)
+            } else {
+                Log.e("KAKAO_LOGIN", "로그인 실패", error);
+                Toast.makeText(this, "카카오 로그인 실패", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Log.i("KAKAO_LOGIN", "로그인 성공");
 

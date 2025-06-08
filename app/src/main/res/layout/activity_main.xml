@@ -58,30 +58,32 @@
     <!-- ✅ EXP 박스 (곰돌이 머리 바로 위) -->
     <FrameLayout
         android:id="@+id/expBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
         android:layout_below="@id/title"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="160dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginTop="160dp">
 
-        <View
-            android:id="@+id/expFillView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="#FFEB3B"
-            android:layout_gravity="start"
-            android:alpha="0.6" />
-
+        <!-- 텍스트 및 게이지 포함한 박스 -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:background="@drawable/bg_mission_box"
-            android:padding="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:gravity="center_vertical"
             android:elevation="6dp">
 
+            <!-- ✅ 노란 게이지 View -->
+            <View
+                android:id="@+id/expFillView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_exp_fill"
+                android:layout_gravity="center_vertical" />
+
+            <!-- EXP 텍스트들 -->
             <TextView
                 android:id="@+id/expLabel"
                 android:layout_width="wrap_content"
@@ -91,7 +93,8 @@
                 android:textColor="#000"
                 android:background="#FFEB3B"
                 android:padding="4dp"
-                android:layout_marginEnd="12dp" />
+                android:layout_marginEnd="8dp"
+                android:gravity="start" />
 
             <TextView
                 android:id="@+id/expText"

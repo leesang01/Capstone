@@ -202,50 +202,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getSurprisedMessage() {
-        String[] surprised = {
-                "🐻😮 깜짝이야! 갑자기 만져서 놀랐잖아!",
-                "😲 어? 뭐야뭐야? 왜 갑자기 터치했어?",
-                "🐻💫 앗! 깜빡 졸고 있었는데 깼네!",
-                "😮✨ 헉! 무슨 일이야? 뭔가 긴급한 거야?",
-                "🐻😯 어머! 갑작스럽게 왜 그래?",
-                "😲💭 앗 깜짝아! 뭔가 중요한 일이야?",
-                "🐻😮 어라? 나한테 뭔가 할 말이 있어?",
-                "😯🎯 우와! 갑자기 놀래키면 안 되지!",
-                "🐻💥 깜짝이야! 심장이 덜컥했네!",
-                "😮🌟 헉! 뭔가 재미있는 일이 생겼어?"
-        };
-        return surprised[random.nextInt(surprised.length)];
+        return getBearMessage();
     }
 
     private String getBearMessage() {
         switch (currentBearState) {
             case HAPPY:
                 String[] happy = {
-                        "🐻 안녕! 오늘도 환경을 위해 노력해줘서 고마워!",
-                        "🌱 너와 함께하니까 지구가 더 건강해지는 것 같아!",
-                        "✨ 오늘도 멋진 하루 보내자!",
-                        "🎉 환경 보호 챔피언! 정말 자랑스러워!",
-                        "💚 네가 하는 작은 실천들이 큰 변화를 만들어!"
+                        "\uD83D\uDC3B 안녕! 오늘도 환경을 위해 노력해줘서 고마워!",
+                        "\uD83C\uDF31 너와 함께하니까 지구가 더 건강해지는 것 같아!",
+                        "\u2728 오늘도 멋진 하루 보내자!",
+                        "\uD83C\uDF89 환경 보호 챔피언! 정말 자랑스러워!",
+                        "\uD83D\uDC9A 네가 하는 작은 실천들이 큰 변화를 만들어!"
                 };
                 return happy[random.nextInt(happy.length)];
             case SAD:
                 String[] sad = {
-                        "🐻💧 어제 미션을 못했구나... 괜찮아, 오늘부터 다시 시작하자!",
-                        "😢 조금 아쉽지만 포기하지 말고 다시 도전해보자!",
-                        "🌧️ 가끔은 쉬는 것도 필요해. 오늘은 작은 것부터 시작해볼까?",
-                        "💙 네가 다시 돌아와줘서 기뻐! 함께 환경을 지켜나가자!"
+                        "\uD83D\uDC3B\uD83D\uDC94 어제 미션을 못했구나... 괜찮아, 오늘부터 다시 시작하자!",
+                        "\uD83D\uDE22 조금 아쉽지만 포기하지 말고 다시 도전해보자!",
+                        "\uD83C\uDF27\uFE0F 가끔은 쉬는 것도 필요해. 오늘은 작은 것부터 시작해볼까?",
+                        "\uD83D\uDC99 네가 다시 돌아와줘서 기뻐! 함께 환경을 지켜나가자!"
                 };
                 return sad[random.nextInt(sad.length)];
             case ANGRY:
                 String[] angry = {
-                        "🐻💢 이봐! 벌써 3일이나 미션을 안 했어! 지구가 울고 있다구!",
-                        "😤 환경 보호는 매일매일이 중요해! 오늘부터라도 다시 시작하자!",
-                        "⚡ 미션을 너무 오래 안 했어... 지금이라도 하나씩 해보자!",
-                        "🔥 3일 동안 뭘 했던 거야?! 지구를 구하는 건 미룰 수 없어!"
+                        "\uD83D\uDC3B\uD83D\uDCA2 이봐! 벌써 3일이나 미션을 안 했어! 지구가 울고 있다구!",
+                        "\uD83D\uDE24 환경 보호는 매일매일이 중요해! 오늘부터라도 다시 시작하자!",
+                        "\u26A1 미션을 너무 오래 안 했어... 지금이라도 하나씩 해보자!",
+                        "\uD83D\uDD25 3일 동안 뭘 했던 거야?! 지구를 구하는 건 미룰 수 없어!"
                 };
                 return angry[random.nextInt(angry.length)];
             default:
-                return "🐻 안녕!";
+                return "\uD83D\uDC3B 안녕!";
         }
     }
 

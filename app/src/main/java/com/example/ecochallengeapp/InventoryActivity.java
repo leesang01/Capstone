@@ -88,19 +88,19 @@ public class InventoryActivity extends AppCompatActivity {
             btnUnwear.setText("착용 해제");
 
             btnWear.setOnClickListener(v -> {
-                rootRef.child(wearKey).setValue(true).addOnSuccessListener(aVoid -> {
-                    btnWear.setEnabled(false);
-                    btnUnwear.setEnabled(true);
-                    Toast.makeText(this, getItemName(itemKey) + " 착용했어요!", Toast.LENGTH_SHORT).show();
-                });
+                // 즉시 반영
+                rootRef.child(wearKey).setValue(true);
+                btnWear.setEnabled(false);
+                btnUnwear.setEnabled(true);
+                Toast.makeText(this, getItemName(itemKey) + " 착용했어요!", Toast.LENGTH_SHORT).show();
             });
 
             btnUnwear.setOnClickListener(v -> {
-                rootRef.child(wearKey).setValue(false).addOnSuccessListener(aVoid -> {
-                    btnWear.setEnabled(true);
-                    btnUnwear.setEnabled(false);
-                    Toast.makeText(this, getItemName(itemKey) + " 착용 해제했어요!", Toast.LENGTH_SHORT).show();
-                });
+                // 즉시 반영
+                rootRef.child(wearKey).setValue(false);
+                btnWear.setEnabled(true);
+                btnUnwear.setEnabled(false);
+                Toast.makeText(this, getItemName(itemKey) + " 착용 해제했어요!", Toast.LENGTH_SHORT).show();
             });
 
         } else {
@@ -134,7 +134,6 @@ public class InventoryActivity extends AppCompatActivity {
                         Toast.makeText(this, getItemName(itemKey) + " 사용! 남은 수량: " + newCount, Toast.LENGTH_SHORT).show();
                     }
 
-                    // ✅ 꿀통 → EXP 증가
                     if ("honey".equals(itemKey)) {
                         DatabaseReference expRef = rootRef.child("exp");
                         expRef.get().addOnSuccessListener(expSnap -> {
@@ -151,7 +150,6 @@ public class InventoryActivity extends AppCompatActivity {
                         });
                     }
 
-                    // ✅ 레벨업 키 → 진화
                     if ("key".equals(itemKey)) {
                         DatabaseReference evolveRef = rootRef.child("isEvolved");
                         evolveRef.setValue(true).addOnSuccessListener(unused -> {

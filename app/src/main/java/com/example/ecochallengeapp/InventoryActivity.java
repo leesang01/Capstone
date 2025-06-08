@@ -78,39 +78,43 @@ public class InventoryActivity extends AppCompatActivity {
 
             String wearKey = "hat".equals(itemKey) ? "isWearingHat" : "isWearingShirt";
 
+            // 착용해제 버튼 숨김
+            btnUnwear.setVisibility(View.GONE);
+
+            // 현재 착용 상태 확인 후 버튼 업데이트
             rootRef.child(wearKey).get().addOnSuccessListener(snapshot -> {
                 boolean isWearing = snapshot.exists() && Boolean.TRUE.equals(snapshot.getValue(Boolean.class));
-                btnWear.setEnabled(!isWearing);
-                btnUnwear.setEnabled(isWearing);
+                updateWearButton(btnWear, isWearing);
             });
 
-            btnWear.setText("착용");
-            btnUnwear.setText("착용 해제");
-
+            // 착용/해제 토글 기능
             btnWear.setOnClickListener(v -> {
-                // 즉시 반영
-                rootRef.child(wearKey).setValue(true);
-                btnWear.setEnabled(false);
-                btnUnwear.setEnabled(true);
-                Toast.makeText(this, getItemName(itemKey) + " 착용했어요!", Toast.LENGTH_SHORT).show();
-            });
+                rootRef.child(wearKey).get().addOnSuccessListener(snapshot -> {
+                    boolean currentlyWearing = snapshot.exists() && Boolean.TRUE.equals(snapshot.getValue(Boolean.class));
 
-            btnUnwear.setOnClickListener(v -> {
-                // 즉시 반영
-                rootRef.child(wearKey).setValue(false);
-                btnWear.setEnabled(true);
-                btnUnwear.setEnabled(false);
-                Toast.makeText(this, getItemName(itemKey) + " 착용 해제했어요!", Toast.LENGTH_SHORT).show();
+                    // 착용 상태 토글
+                    rootRef.child(wearKey).setValue(!currentlyWearing).addOnSuccessListener(aVoid -> {
+                        String message = !currentlyWearing ?
+                                getItemName(itemKey) + " 착용했어요!" :
+                                getItemName(itemKey) + " 착용 해제했어요!";
+
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+                        // 버튼 상태 업데이트
+                        updateWearButton(btnWear, !currentlyWearing);
+                    });
+                });
             });
 
         } else {
+            // 소비 아이템 (꿀통, 레벨업 키 등)
             userRef.child(itemKey).get().addOnSuccessListener(snapshot -> {
                 long count = snapshot.exists() ? snapshot.getValue(Long.class) : 0;
                 name.setText(getItemName(itemKey) + " (" + count + ")");
             });
 
+            btnUnwear.setVisibility(View.GONE);
             btnWear.setText("사용");
-            btnUnwear.setText("보관");
 
             btnWear.setOnClickListener(v -> {
                 userRef.child(itemKey).get().addOnSuccessListener(snapshot -> {
@@ -161,13 +165,19 @@ public class InventoryActivity extends AppCompatActivity {
 
                 });
             });
-
-            btnUnwear.setOnClickListener(v -> {
-                Toast.makeText(this, getItemName(itemKey) + " 보관중!", Toast.LENGTH_SHORT).show();
-            });
         }
 
         inventoryContainer.addView(itemView);
+    }
+
+    private void updateWearButton(Button button, boolean isWearing) {
+        if (isWearing) {
+            button.setText("착용해제");
+            button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_red_light, null));
+        } else {
+            button.setText("착용");
+            button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_green_light, null));
+        }
     }
 
     private int getIconForItem(String itemKey) {

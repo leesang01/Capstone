@@ -55,6 +55,31 @@
         android:layout_marginTop="40dp"
         android:layout_alignParentTop="true" />
 
+    <!-- Logout -->
+    <LinearLayout
+        android:id="@+id/btn_logout"
+        android:layout_width="37dp"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="Logout Icon"
+            android:src="@drawable/ic_logout" />
+    </LinearLayout>
+
     <!-- 🎈 간단한 말풍선 -->
     <TextView
         android:id="@+id/speechBubbleText"

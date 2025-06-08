@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.googleGmsGoogleServices)
-    // alias(libs.plugins.kotlinAndroid) ❌ Kotlin 제거
 }
 
 android {
@@ -32,11 +31,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    // kotlinOptions 블록 제거됨 ❌
 }
 
 dependencies {
-    implementation(libs.appcompat)
+    //implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
@@ -46,11 +44,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
 
-    // Kakao 로그인
-    implementation("com.kakao.sdk:v2-user:2.18.0")
+    // Kakao
+    implementation("com.kakao.sdk:v2-user:2.19.0")
 
-    // 아래는 Kotlin 전용 라이브러리이므로 제거됨 ❌
-    // implementation(libs.core.ktx)
 
     // 테스트 관련
     testImplementation(libs.junit)

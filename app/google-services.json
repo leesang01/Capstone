@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "35679060521-4j7ba5ci6klj2g7bagml53tth56ii4le.apps.googleusercontent.com",
+          "client_id": "35679060521-35fp4nvevg8o3bkj63g7gkkf5i7qihj6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.ecochallengeapp",
@@ -23,11 +23,19 @@
           }
         },
         {
-          "client_id": "35679060521-gpsqn9i7a47n1r3qc4arb4r30hl5sd6t.apps.googleusercontent.com",
+          "client_id": "35679060521-9fgqb6qi439l5qkq7ppbqm4e62ahl85o.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.ecochallengeapp",
             "certificate_hash": "a5acf819806bbb7c176e988ab7ff405b7369e71a"
+          }
+        },
+        {
+          "client_id": "35679060521-k9jmqm207j4ei8dh5p4n1li86ld6rfmr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ecochallengeapp",
+            "certificate_hash": "89588118f3aa275dea8240181a821e8e4b107518"
           }
         },
         {

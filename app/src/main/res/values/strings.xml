@@ -8,6 +8,9 @@
     <!-- 🔹 Google 로그인용 클라이언트 ID -->
     <string name="default_web_client_id">1234567890-abc123def456.apps.googleusercontent.com</string>
 
+    <!-- 🔹 카카오 로그인용 앱 키 -->
+    <string name="kakao_native_app_key">f47697762980405d27894a31572821fe</string>
+
     <!-- 🧭 보관함 관련 추가 -->
     <string name="title_inventory">내 보관함</string>
     <string name="back">뒤로가기</string>

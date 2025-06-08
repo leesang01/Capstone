@@ -15,10 +15,16 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 
+// kakao
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.common.model.ClientError;
 import com.kakao.sdk.common.model.ClientErrorCause;
-import com.kakao.sdk.auth.model.OAuthToken; // ✅ 추가된 import
+import com.kakao.sdk.auth.model.OAuthToken;
+import com.kakao.sdk.common.KakaoSdk;
+
+// kotlin용 콜백
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -54,12 +60,24 @@ public class LoginActivity extends AppCompatActivity {
         kakaoLoginBtn.setOnClickListener(view -> {
             if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(this)) {
                 UserApiClient.getInstance().loginWithKakaoTalk(this, (token, error) -> {
-                    handleKakaoResult(token, error);
+                    if (error != null) {
+                        Log.e("KAKAO", "로그인 실패", error);
+                    } else if (token != null) {
+                        Log.i("KAKAO", "로그인 성공: " + token.getAccessToken());
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    }
                     return null;
                 });
             } else {
                 UserApiClient.getInstance().loginWithKakaoAccount(this, (token, error) -> {
-                    handleKakaoResult(token, error);
+                    if (error != null) {
+                        Log.e("KAKAO", "로그인 실패", error);
+                    } else if (token != null) {
+                        Log.i("KAKAO", "로그인 성공: " + token.getAccessToken());
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    }
                     return null;
                 });
             }
@@ -77,7 +95,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         } else if (token != null) {
             Log.i("Kakao", "카카오 로그인 성공: " + token.getAccessToken());
-            // TODO: 로그인 성공 후 화면 이동 or Firebase 연동
+
+            // ✅ 로그인 성공 → MainActivity로 이동
+            Toast.makeText(this, "카카오 로그인 성공!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 

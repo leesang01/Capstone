@@ -278,8 +278,8 @@
     <!-- 뒤로가기 버튼 -->
     <ImageView
         android:id="@+id/btn_back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="start|top"
         android:layout_margin="16dp"
         android:background="@android:color/transparent"

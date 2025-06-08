@@ -13,8 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MissionsActivity extends AppCompatActivity {
@@ -116,12 +119,12 @@ public class MissionsActivity extends AppCompatActivity {
 
     private List<Mission> loadAllMissions() {
         return Arrays.asList(
-                new Mission("텀블러 사용하기", 10), new Mission("쓰레기 줍기", 20), new Mission("전등 끄고 나가기", 30),
-                new Mission("장바구니 사용하기", 40), new Mission("대중교통 이용하기", 15), new Mission("전자영수증 받기", 10),
-                new Mission("물 절약하기", 12), new Mission("친환경 제품 사용하기", 25), new Mission("중고 거래하기", 18),
-                new Mission("리필 용기 사용하기", 14), new Mission("에코백 사용하기", 13), new Mission("종이 아껴쓰기", 16),
-                new Mission("플라스틱 줄이기", 22), new Mission("일회용품 사용 줄이기", 17), new Mission("비건 식사하기", 21),
-                new Mission("재활용 분리배출", 19)
+                new Mission("텀블러 사용하기", 100), new Mission("쓰레기 줍기", 100), new Mission("전등 끄고 나가기", 100),
+                new Mission("장바구니 사용하기", 100), new Mission("대중교통 이용하기", 100), new Mission("전자영수증 받기", 100),
+                new Mission("물 절약하기", 100), new Mission("친환경 제품 사용하기", 100), new Mission("중고 거래하기", 100),
+                new Mission("리필 용기 사용하기", 100), new Mission("에코백 사용하기", 100), new Mission("종이 아껴쓰기", 100),
+                new Mission("플라스틱 줄이기", 100), new Mission("일회용품 사용 줄이기", 100), new Mission("비건 식사하기", 100),
+                new Mission("재활용 분리배출", 100)
         );
     }
 
@@ -198,7 +201,11 @@ public class MissionsActivity extends AppCompatActivity {
             } else {
                 coinLayout.setVisibility(View.VISIBLE);
                 completeText.setVisibility(View.GONE);
-                layout.setOnClickListener(v -> openCameraActivity(mission.getCoin(), mission.getTitle()));
+                layout.setOnClickListener(v -> {
+                    String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                    FirebaseDatabase.getInstance().getReference("Users").child(uid).child("lastMissionDate").setValue(today);
+                    openCameraActivity(mission.getCoin(), mission.getTitle(), mission.getTitle());
+                });
             }
         });
     }
@@ -247,10 +254,11 @@ public class MissionsActivity extends AppCompatActivity {
         return result;
     }
 
-    private void openCameraActivity(int coinValue, String missionId) {
+    private void openCameraActivity(int coinValue, String missionId, String missionTitle) {
         Intent intent = new Intent(this, CameraActivity.class);
         intent.putExtra("rewardCoin", coinValue);
         intent.putExtra("missionId", missionId);
+        intent.putExtra("missionTitle", missionTitle);
         startActivity(intent);
     }
 

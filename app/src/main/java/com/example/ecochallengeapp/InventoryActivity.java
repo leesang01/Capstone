@@ -2,9 +2,13 @@ package com.example.ecochallengeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +19,7 @@ public class InventoryActivity extends AppCompatActivity {
 
     private LinearLayout inventoryContainer;
     private DatabaseReference userRef;
+    private DatabaseReference rootRef;
     private String uid;
 
     @Override
@@ -25,13 +30,12 @@ public class InventoryActivity extends AppCompatActivity {
         inventoryContainer = findViewById(R.id.inventoryContainer);
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("inventory");
+        rootRef = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+        userRef = rootRef.child("inventory");
 
-        // ✅ 뒤로가기 버튼 클릭 시 ShopActivity로 이동
         ImageView backButton = findViewById(R.id.btn_back);
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(InventoryActivity.this, ShopActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, ShopActivity.class));
             finish();
         });
 
@@ -44,8 +48,10 @@ public class InventoryActivity extends AppCompatActivity {
 
             if (snapshot.exists()) {
                 for (DataSnapshot item : snapshot.getChildren()) {
-                    if (Boolean.TRUE.equals(item.getValue(Boolean.class))) {
-                        addInventoryItem(item.getKey());
+                    String itemKey = item.getKey();
+                    Long count = item.getValue(Long.class);
+                    if (count != null && count > 0 || "hat".equals(itemKey) || "shirt".equals(itemKey)) {
+                        addInventoryItem(itemKey);
                     }
                 }
             } else {
@@ -58,23 +64,120 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void addInventoryItem(String itemKey) {
-        LinearLayout itemLayout = new LinearLayout(this);
-        itemLayout.setOrientation(LinearLayout.HORIZONTAL);
-        itemLayout.setPadding(16, 16, 16, 16);
+        View itemView = LayoutInflater.from(this).inflate(R.layout.item_inventory, inventoryContainer, false);
 
-        ImageView icon = new ImageView(this);
-        icon.setLayoutParams(new LinearLayout.LayoutParams(100, 100));
+        ImageView icon = itemView.findViewById(R.id.itemIcon);
+        TextView name = itemView.findViewById(R.id.itemName);
+        Button btnWear = itemView.findViewById(R.id.btnWear);
+        Button btnUnwear = itemView.findViewById(R.id.btnUnwear);
+
         icon.setImageResource(getIconForItem(itemKey));
 
-        TextView name = new TextView(this);
-        name.setText(getItemName(itemKey));
-        name.setTextSize(18);
-        name.setPadding(24, 0, 0, 0);
+        if ("hat".equals(itemKey) || "shirt".equals(itemKey)) {
+            name.setText(getItemName(itemKey));
 
-        itemLayout.addView(icon);
-        itemLayout.addView(name);
+            String wearKey = "hat".equals(itemKey) ? "isWearingHat" : "isWearingShirt";
 
-        inventoryContainer.addView(itemLayout);
+            // 착용해제 버튼 숨김
+            btnUnwear.setVisibility(View.GONE);
+
+            // 현재 착용 상태 확인 후 버튼 업데이트
+            rootRef.child(wearKey).get().addOnSuccessListener(snapshot -> {
+                boolean isWearing = snapshot.exists() && Boolean.TRUE.equals(snapshot.getValue(Boolean.class));
+                updateWearButton(btnWear, isWearing);
+            });
+
+            // 착용/해제 토글 기능
+            btnWear.setOnClickListener(v -> {
+                rootRef.child(wearKey).get().addOnSuccessListener(snapshot -> {
+                    boolean currentlyWearing = snapshot.exists() && Boolean.TRUE.equals(snapshot.getValue(Boolean.class));
+
+                    // 착용 상태 토글
+                    rootRef.child(wearKey).setValue(!currentlyWearing).addOnSuccessListener(aVoid -> {
+                        String message = !currentlyWearing ?
+                                getItemName(itemKey) + " 착용했어요!" :
+                                getItemName(itemKey) + " 착용 해제했어요!";
+
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+                        // 버튼 상태 업데이트
+                        updateWearButton(btnWear, !currentlyWearing);
+                    });
+                });
+            });
+
+        } else {
+            // 소비 아이템 (꿀통, 레벨업 키 등)
+            userRef.child(itemKey).get().addOnSuccessListener(snapshot -> {
+                long count = snapshot.exists() ? snapshot.getValue(Long.class) : 0;
+                name.setText(getItemName(itemKey) + " (" + count + ")");
+            });
+
+            btnUnwear.setVisibility(View.GONE);
+            btnWear.setText("사용");
+
+            btnWear.setOnClickListener(v -> {
+                userRef.child(itemKey).get().addOnSuccessListener(snapshot -> {
+                    Long latestCount = snapshot.getValue(Long.class);
+                    if (latestCount == null || latestCount <= 0) {
+                        userRef.child(itemKey).removeValue();
+                        inventoryContainer.removeView(itemView);
+                        Toast.makeText(this, getItemName(itemKey) + "을(를) 모두 사용했습니다!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    long newCount = latestCount - 1;
+
+                    if (newCount <= 0) {
+                        userRef.child(itemKey).removeValue();
+                        inventoryContainer.removeView(itemView);
+                        Toast.makeText(this, getItemName(itemKey) + "을(를) 모두 사용했습니다!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        userRef.child(itemKey).setValue(newCount);
+                        name.setText(getItemName(itemKey) + " (" + newCount + ")");
+                        Toast.makeText(this, getItemName(itemKey) + " 사용! 남은 수량: " + newCount, Toast.LENGTH_SHORT).show();
+                    }
+
+                    if ("honey".equals(itemKey)) {
+                        DatabaseReference expRef = rootRef.child("exp");
+                        expRef.get().addOnSuccessListener(expSnap -> {
+                            long currentExp = expSnap.exists() ? expSnap.getValue(Long.class) : 0L;
+                            if (currentExp >= 200) {
+                                Toast.makeText(this, "EXP가 이미 최대입니다!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            long updatedExp = Math.min(currentExp + 40, 200);
+                            expRef.setValue(updatedExp);
+                            Toast.makeText(this, "EXP +40 증가! (현재: " + updatedExp + ")", Toast.LENGTH_SHORT).show();
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(this, "EXP 업데이트 실패", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+
+                    if ("key".equals(itemKey)) {
+                        DatabaseReference evolveRef = rootRef.child("isEvolved");
+                        evolveRef.setValue(true).addOnSuccessListener(unused -> {
+                            Toast.makeText(this, "곰이 진화했어요! 🐻‍❄️", Toast.LENGTH_SHORT).show();
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(this, "진화 실패", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+
+                });
+            });
+        }
+
+        inventoryContainer.addView(itemView);
+    }
+
+    private void updateWearButton(Button button, boolean isWearing) {
+        if (isWearing) {
+            button.setText("착용해제");
+            button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_red_light, null));
+        } else {
+            button.setText("착용");
+            button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_green_light, null));
+        }
     }
 
     private int getIconForItem(String itemKey) {
@@ -83,7 +186,7 @@ public class InventoryActivity extends AppCompatActivity {
             case "shirt": return R.drawable.ic_shirt;
             case "honey": return R.drawable.ic_honey;
             case "key": return R.drawable.ic_key;
-            default: return R.drawable.ic_coin; // ✅ ic_default → ic_coin
+            default: return R.drawable.ic_coin;
         }
     }
 

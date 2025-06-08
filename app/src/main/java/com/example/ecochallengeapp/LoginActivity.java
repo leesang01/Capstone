@@ -56,53 +56,53 @@ public class LoginActivity extends AppCompatActivity {
             startActivityForResult(signInIntent, RC_SIGN_IN);
         });
 
+        // Kakao SDK 초기화
+        KakaoSdk.init(this, getString(R.string.kakao_native_app_key));
+
         // ✅ Kakao 로그인
-        kakaoLoginBtn.setOnClickListener(view -> {
+
+        // 로그인 버튼 클릭 이벤트
+        Button btnKakao = findViewById(R.id.btnKakaoLogin);
+        btnKakao.setOnClickListener(v -> {
             if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(this)) {
-                UserApiClient.getInstance().loginWithKakaoTalk(this, (token, error) -> {
-                    if (error != null) {
-                        Log.e("KAKAO", "로그인 실패", error);
-                    } else if (token != null) {
-                        Log.i("KAKAO", "로그인 성공: " + token.getAccessToken());
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
-                    }
-                    return null;
-                });
+                UserApiClient.getInstance().loginWithKakaoTalk(this, kakaoCallback);
             } else {
-                UserApiClient.getInstance().loginWithKakaoAccount(this, (token, error) -> {
-                    if (error != null) {
-                        Log.e("KAKAO", "로그인 실패", error);
-                    } else if (token != null) {
-                        Log.i("KAKAO", "로그인 성공: " + token.getAccessToken());
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
-                    }
-                    return null;
-                });
+                UserApiClient.getInstance().loginWithKakaoAccount(this, kakaoCallback);
             }
         });
     }
 
-    private void handleKakaoResult(OAuthToken token, Throwable error) {
+    // Kakao 로그인 콜백
+    private final Function2<OAuthToken, Throwable, Unit> kakaoCallback = (token, error) -> {
         if (error != null) {
-            if (error instanceof ClientError && ((ClientError) error).getReason() == ClientErrorCause.Cancelled) {
-                Toast.makeText(this, "사용자가 로그인 취소함", Toast.LENGTH_SHORT).show();
-                Log.w("Kakao", "사용자가 로그인 취소함");
-            } else {
-                Toast.makeText(this, "카카오 로그인 실패", Toast.LENGTH_SHORT).show();
-                Log.e("Kakao", "카카오 로그인 실패", error);
-            }
-        } else if (token != null) {
-            Log.i("Kakao", "카카오 로그인 성공: " + token.getAccessToken());
+            Log.e("KAKAO_LOGIN", "로그인 실패", error);
+            Toast.makeText(this, "카카오 로그인 실패", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.i("KAKAO_LOGIN", "로그인 성공");
 
-            // ✅ 로그인 성공 → MainActivity로 이동
-            Toast.makeText(this, "카카오 로그인 성공!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            UserApiClient.getInstance().me((user, meError) -> {
+                if (meError != null) {
+                    Log.e("KAKAO_USER", "사용자 정보 요청 실패", meError);
+                } else {
+                    String nickname = "";
+                    if (user.getKakaoAccount() != null && user.getKakaoAccount().getProfile() != null) {
+                        nickname = user.getKakaoAccount().getProfile().getNickname();
+                    }
+
+                    Log.i("KAKAO_USER", "닉네임: " + nickname);
+                    Toast.makeText(LoginActivity.this, "카카오 로그인 성공", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return null;
+            });
+
         }
-    }
+        return null;
+    };
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -8,11 +8,10 @@
 
     <!-- ✅ 카메라 및 저장소 권한 -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- 🔽 선택적으로 사용할 수 있음 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- ✅ 카메라 하드웨어가 없어도 실행 가능하도록 설정 -->
+    <!-- ✅ 카메라 하드웨어가 필수는 아님 -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
@@ -59,8 +58,9 @@
         <activity android:name=".NoticeWriteActivity" android:exported="true" />
         <activity android:name=".ShopActivity" android:exported="true" />
         <activity android:name=".PhotoUploadActivity" android:exported="true" />
+
+        <!-- ✅ 보관함 액티비티 추가 -->
         <activity android:name=".InventoryActivity" android:exported="true" />
-        <activity android:name=".AdminApprovalActivity" android:exported="true" />
 
     </application>
 

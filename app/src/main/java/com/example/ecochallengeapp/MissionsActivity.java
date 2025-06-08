@@ -204,7 +204,7 @@ public class MissionsActivity extends AppCompatActivity {
                 layout.setOnClickListener(v -> {
                     String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                     FirebaseDatabase.getInstance().getReference("Users").child(uid).child("lastMissionDate").setValue(today);
-                    openCameraActivity(mission.getCoin(), mission.getTitle());
+                    openCameraActivity(mission.getCoin(), mission.getTitle(), mission.getTitle());
                 });
             }
         });
@@ -254,10 +254,11 @@ public class MissionsActivity extends AppCompatActivity {
         return result;
     }
 
-    private void openCameraActivity(int coinValue, String missionId) {
+    private void openCameraActivity(int coinValue, String missionId, String missionTitle) {
         Intent intent = new Intent(this, CameraActivity.class);
         intent.putExtra("rewardCoin", coinValue);
         intent.putExtra("missionId", missionId);
+        intent.putExtra("missionTitle", missionTitle);
         startActivity(intent);
     }
 

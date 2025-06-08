@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 배경 이미지 -->
+    <!-- 🌲 배경 이미지 -->
     <ImageView
         android:id="@+id/bg"
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- 제목 -->
+    <!-- 🐻 앱 제목 -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -55,43 +55,35 @@
         android:layout_marginTop="40dp"
         android:layout_alignParentTop="true" />
 
-    <!-- ✅ EXP 박스 (곰돌이 머리 바로 위) -->
-    <FrameLayout
-        android:id="@+id/expBox"
+    <!-- ✅ 관리자 전용 버튼 (숨김, 제목 아래에 위치) -->
+    <Button
+        android:id="@+id/adminButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="160dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginTop="16dp"
+        android:text="관리자 전용"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2E7D32"
+        android:visibility="gone" />
 
-        <View
-            android:id="@+id/expFillView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="#FFEB3B"
-            android:layout_gravity="start"
-            android:alpha="0.6" />
+    <!-- ✅ EXP 박스 -->
+    <FrameLayout
+        android:id="@+id/expBox"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/adminButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="160dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:background="@drawable/bg_mission_box"
-            android:padding="8dp"
-            android:gravity="center_vertical"
-            android:elevation="6dp">
-
-            <TextView
-                android:id="@+id/expLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="EXP"
-                android:textStyle="bold"
-                android:textColor="#000"
-                android:background="#FFEB3B"
-                android:padding="4dp"
-                android:layout_marginEnd="12dp" />
+            android:elevation="8dp">
 
             <TextView
                 android:id="@+id/expText"
@@ -104,7 +96,7 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- 🎈 말풍선 -->
+    <!-- 💬 말풍선 -->
     <TextView
         android:id="@+id/speechBubbleText"
         android:layout_width="wrap_content"
@@ -113,7 +105,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:background="@drawable/speech_bubble_bg"
-        android:text="🐻 안녕! 나를 클릭해봐!"
+        android:text="🐻 안녕! 나를 클릭해보아!"
         android:textColor="#2E7D32"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -137,7 +129,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="곰 캐릭터 - 클릭해서 대화하기" />
 
-    <!-- 하단 메뉴 -->
+    <!-- 📱 하단 메뉴 -->
     <LinearLayout
         android:id="@+id/bottomMenu"
         android:layout_width="match_parent"

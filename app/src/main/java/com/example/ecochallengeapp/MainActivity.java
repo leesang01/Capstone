@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;  // ✅ 수정됨
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView coinText;
     private TextView speechBubbleText;
     private TextView expText;
-    private View expFillView;
     private FrameLayout expBox;
+    private Button adminButton; // ✅ Button으로 변경됨
 
     private DatabaseReference userRef;
     private String uid;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private final Random random = new Random();
 
     private static final int MAX_EXP = 200;
+    private static final String ADMIN_UID = "xpSjG4aOlFODFzQHCIvCYSxj42K2"; // ✅ 관리자 UID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,17 @@ public class MainActivity extends AppCompatActivity {
         initializeViews();
         loadUserData();
         checkEquipStatus();
+
+        // ✅ 관리자 계정일 때만 버튼 보이기
+        if (uid.equals(ADMIN_UID)) {
+            adminButton.setVisibility(View.VISIBLE);
+            adminButton.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, AdminApprovalActivity.class);
+                startActivity(intent);
+            });
+        } else {
+            adminButton.setVisibility(View.GONE);
+        }
     }
 
     private void initializeViews() {
@@ -71,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
         coinText = findViewById(R.id.coin_text);
         speechBubbleText = findViewById(R.id.speechBubbleText);
         expText = findViewById(R.id.expText);
-        expFillView = findViewById(R.id.expFillView);
         expBox = findViewById(R.id.expBox);
+        adminButton = findViewById(R.id.adminButton); // ✅ Button으로 연결됨
 
         bearImage.setOnClickListener(v -> onBearClicked());
 
@@ -96,23 +108,11 @@ public class MainActivity extends AppCompatActivity {
         userRef.child("exp").addValueEventListener(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int exp = snapshot.exists() ? snapshot.getValue(Integer.class) : 0;
-                updateExpUI(exp);
+                expText.setText(exp + "/" + MAX_EXP);
             }
             @Override public void onCancelled(@NonNull DatabaseError error) {
-                updateExpUI(0);
+                expText.setText("0/" + MAX_EXP);
             }
-        });
-    }
-
-    private void updateExpUI(int currentExp) {
-        expText.setText(currentExp + "/" + MAX_EXP);
-        expBox.post(() -> {
-            int boxWidth = expBox.getWidth();
-            float ratio = currentExp / (float) MAX_EXP;
-            int fillWidth = (int)(ratio * boxWidth);
-            ViewGroup.LayoutParams params = expFillView.getLayoutParams();
-            params.width = fillWidth;
-            expFillView.setLayoutParams(params);
         });
     }
 
@@ -183,11 +183,7 @@ public class MainActivity extends AppCompatActivity {
         else if (isWearingShirt) drawableName += "_shirt";
 
         int resId = getResources().getIdentifier(drawableName, "drawable", getPackageName());
-        if (resId != 0) {
-            bearImage.setImageResource(resId);
-        } else {
-            bearImage.setImageResource(R.drawable.bear_happy);
-        }
+        bearImage.setImageResource(resId != 0 ? resId : R.drawable.bear_happy);
     }
 
     private void setBearImageByState() {
@@ -202,19 +198,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getSurprisedMessage() {
-        String[] surprised = {
-                "🐻😮 깜짝이야! 갑자기 만져서 놀랐잖아!",
-                "😲 어? 뭐야뭐야? 왜 갑자기 터치했어?",
-                "🐻💫 앗! 깜빡 졸고 있었는데 깼네!",
-                "😮✨ 헉! 무슨 일이야? 뭔가 긴급한 거야?",
-                "🐻😯 어머! 갑작스럽게 왜 그래?",
-                "😲💭 앗 깜짝아! 뭔가 중요한 일이야?",
-                "🐻😮 어라? 나한테 뭔가 할 말이 있어?",
-                "😯🎯 우와! 갑자기 놀래키면 안 되지!",
-                "🐻💥 깜짝이야! 심장이 덜컥했네!",
-                "😮🌟 헉! 뭔가 재미있는 일이 생겼어?"
-        };
-        return surprised[random.nextInt(surprised.length)];
+        return getBearMessage();
     }
 
     private String getBearMessage() {
@@ -230,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 return happy[random.nextInt(happy.length)];
             case SAD:
                 String[] sad = {
-                        "🐻💧 어제 미션을 못했구나... 괜찮아, 오늘부터 다시 시작하자!",
+                        "🐻💔 어제 미션을 못했구나... 괜찮아, 오늘부터 다시 시작하자!",
                         "😢 조금 아쉽지만 포기하지 말고 다시 도전해보자!",
                         "🌧️ 가끔은 쉬는 것도 필요해. 오늘은 작은 것부터 시작해볼까?",
                         "💙 네가 다시 돌아와줘서 기뻐! 함께 환경을 지켜나가자!"

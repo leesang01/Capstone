@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_forest" />
+        android:src="@drawable/bg_forest"
+        android:contentDescription="배경 이미지" />
 
     <!-- 🌑 어두운 오버레이 -->
     <View
@@ -32,24 +33,32 @@
 
     <!-- 버튼 영역 -->
     <LinearLayout
+        android:id="@+id/loginButtonContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTitle"
+        android:layout_marginTop="180dp"
         android:orientation="vertical"
+        android:gravity="center"
         android:padding="24dp">
 
-        <!-- ✅ Google 로그인 (변경하지 않음) -->
-        <com.google.android.gms.common.SignInButton
+        <!-- ✅ Google 로그인 버튼 -->
+        <Button
             android:id="@+id/btnGoogleLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Google 로그인"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#4CAF50"
+            android:layout_marginBottom="12dp" />
 
-        <!-- ✅ Kakao 로그인 -->
+        <!-- ✅ Kakao 로그인 버튼 -->
         <Button
             android:id="@+id/btnKakaoLogin"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="카카오 로그인"
-            android:layout_marginTop="16dp" />
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#4CAF50" />
     </LinearLayout>
 </RelativeLayout>

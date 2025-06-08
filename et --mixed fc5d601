@@ -1,0 +1,210 @@
+[33mcommit 5d87fb0182812c992f64a3309db2ad8047347a32[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mforceerror[m[33m, [m[1;31morigin/forceerror[m[33m)[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Mon Jun 9 03:01:05 2025 +0900
+
+    camera ok
+
+[33mcommit ac7a2791f2575b100bed0506ab3d2fff478aa161[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Merge: 3781ca0 afcbcc2
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Mon Jun 9 01:59:33 2025 +0900
+
+    Merge branch 'master' of https://github.com/leesang01/Capstone
+
+[33mcommit 3781ca0091dbb79e725e559912707042dce8fa0e[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Mon Jun 9 01:59:07 2025 +0900
+
+    업로드 오류 수정
+
+[33mcommit afcbcc20cabbfcca7bb37fe521e239b55e8e8b41[m
+Merge: d832c30 76ded32
+Author: kj041400 <kj041400@naver.com>
+Date:   Mon Jun 9 01:40:30 2025 +0900
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit d832c30e9fc984247475dbf5b1734a27f95cceb3[m
+Merge: 6fa8a6b c45a775
+Author: kj041400 <kj041400@naver.com>
+Date:   Sun Jun 8 20:36:46 2025 +0900
+
+    Merge branch 'master' of https://github.com/leesang01/Capstone
+
+[33mcommit 76ded32ef7981a4146c778db4558b9284094a823[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Mon Jun 9 01:09:06 2025 +0900
+
+    관리자 화면 구현
+
+[33mcommit 6fa8a6be0e8c8f995a1ec001a2c89c6c49d08378[m
+Merge: fc5d601 de77a2f
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Sun Jun 8 20:31:14 2025 +0900
+
+    Resolve merge conflict in InventoryActivity.java
+
+[33mcommit c45a7759f545100e8288c058a40aca2f4f5b2921[m
+Merge: fc5d601 de77a2f
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Sun Jun 8 20:31:14 2025 +0900
+
+    Resolve merge conflict in InventoryActivity.java
+
+[33mcommit fc5d601eb66d7e149661ef24e5ee999f1c4cf366[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Sun Jun 8 20:27:31 2025 +0900
+
+    exp 게이지 화면 수정
+
+[33mcommit de77a2f408d0886227b1acd04a25924c5cf15251[m
+Author: kj041400 <kj041400@naver.com>
+Date:   Sun Jun 8 20:23:50 2025 +0900
+
+    현서야 다했어 합쳐줘
+
+[33mcommit ce6d059b9a6e64bf77e9ad362ecce3d6a2dfa123[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Sun Jun 8 19:28:25 2025 +0900
+
+    모든 곰 이미지 구현
+
+[33mcommit 54f9607ef3fea0f76f426761402c09562930b7bc[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Fri Jun 6 21:58:34 2025 +0900
+
+    보관함 화면 구현 추가
+
+[33mcommit c07de02f677021ccb67787994264c3ed24ac23f6[m
+Merge: 08f6132 c2da551
+Author: 이상권 <162536355+leesang01@users.noreply.github.com>
+Date:   Thu Jun 5 20:13:19 2025 +0900
+
+    Merge pull request #2 from leesang01/hhh
+    
+    카카오 로그인 추가
+
+[33mcommit c2da55114e3e016ce326d2e53673023aecc1fb53[m[33m ([m[1;31morigin/hhh[m[33m)[m
+Author: leesang01 <ysa015@naver.com>
+Date:   Thu Jun 5 20:07:41 2025 +0900
+
+    카카오 로그인 추가
+
+[33mcommit 08f6132aba36000e0a46b25e82febcdd3b0c2de6[m
+Author: kj041400 <kj041400@naver.com>
+Date:   Thu Jun 5 20:01:49 2025 +0900
+
+    현서야 커밋해
+
+[33mcommit 00aa7ea6ceac6e4a52742fb5da96c1a9fbe81df2[m
+Merge: 121a1f8 c2fb390
+Author: nemoKimjin <162523866+nemoKimjin@users.noreply.github.com>
+Date:   Thu Jun 5 19:58:02 2025 +0900
+
+    Merge pull request #1 from leesang01/my-backup-branch
+    
+    곰돌이 업데이트1차본
+
+[33mcommit c2fb390ecf77e2d2f2a7c53f7422751d165bd0b2[m[33m ([m[1;31morigin/my-backup-branch[m[33m)[m
+Merge: 73b12c3 121a1f8
+Author: nemoKimjin <162523866+nemoKimjin@users.noreply.github.com>
+Date:   Thu Jun 5 19:55:41 2025 +0900
+
+    Merge branch 'master' into my-backup-branch
+
+[33mcommit 73b12c3ddc527f414080699c49f1b1d4815bcf34[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Wed Jun 4 18:45:08 2025 +0900
+
+    곰돌이 업데이트1차본
+
+[33mcommit 121a1f8bdaffcde48614a8f37b856074f8716dff[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Thu Jun 5 18:20:33 2025 +0900
+
+    미션목록 새로고침 완료
+
+[33mcommit 7919a4b30b6b0618a86ddcdec6363b8792b048b7[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Thu Jun 5 17:55:39 2025 +0900
+
+    커밋 메시지
+
+[33mcommit 8c3bea84e1f4d08ec216132857a5152fec93db53[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Wed Jun 4 18:45:08 2025 +0900
+
+    메인화면 경험치 UI 추가
+
+[33mcommit 64dc9ae54f997f67057aa12d092e7f0b423a85d1[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Wed Jun 4 15:54:11 2025 +0900
+
+    자유게시판 UI 수정 및 코인 지급 기능 추가
+
+[33mcommit ca827493aefcf645a08afba7f3def1f1c40cacae[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Mon Jun 2 17:51:55 2025 +0900
+
+    게시판 전체 완성 및 상점 화면 구현
+
+[33mcommit 1d9f3ed544702210881878ef318f07e7b29da7e6[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Sat May 31 17:14:01 2025 +0900
+
+    카메라 인증, 소셜 로그인, 자유 게시판 구현
+
+[33mcommit f5fe7e54d12887a979612a2cc494bbb82304a44e[m
+Merge: c2ec8c0 e655591
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Thu May 22 10:08:36 2025 +0900
+
+    Merge branch 'master' of https://github.com/leesang01/Capstone
+
+[33mcommit c2ec8c060777c143d3f5423fc69407682cd4ab49[m
+Author: totobabo01 <totobabo01@gmail.com>
+Date:   Thu May 22 10:08:09 2025 +0900
+
+    커뮤니티 화면 커밋
+
+[33mcommit e655591a2970d64de5e6881b320519fd06779851[m
+Author: JANG HYEON SEO <totobabo01@gmail.com>
+Date:   Wed May 21 21:29:47 2025 +0900
+
+    카메라 관련 오류 코드 발견 후 수정
+
+[33mcommit 2adda5d8752d4c80af6eaaf06620472c12bc8adc[m
+Author: JANG HYEON SEO <totobabo01@gmail.com>
+Date:   Wed May 21 21:00:15 2025 +0900
+
+    커뮤니티 목록 화면 구현
+
+[33mcommit 41ae4e60df3071c4f900dfbd577014f91b8c4265[m
+Author: JANG HYEON SEO <totobabo01@gmail.com>
+Date:   Mon May 19 03:46:45 2025 +0900
+
+    업데이트 내용 작성
+
+[33mcommit 75e72d11752e694899a2f1a52504c5ca15b26c5a[m
+Author: JANG HYEON SEO <totobabo01@gmail.com>
+Date:   Mon May 19 00:41:11 2025 +0900
+
+    카메라 화면 레이아웃 수정
+
+[33mcommit 4f9cd735b03d61c9d4841f17fcf9c2fe6be274cb[m
+Author: JANG HYEON SEO <totobabo01@gmail.com>
+Date:   Mon Apr 28 21:27:19 2025 +0900
+
+    first upload
+
+[33mcommit 7a85c41a740fc8dae9f44a318bdd4383a7f1ea9e[m
+Author: JANG HYEON SEO <totobabo01@gmail.com>
+Date:   Mon Apr 28 21:24:32 2025 +0900
+
+    First upload
+
+[33mcommit 29537dc1f02113c00ffcd63a1bf733e3959fd8a5[m
+Author: JANG HYEON SEO <totobabo01@gmail.com>
+Date:   Mon Apr 28 21:04:40 2025 +0900
+
+    First upload

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -114,7 +115,12 @@ public class PhotoUploadActivity extends AppCompatActivity {
             return;
         }
 
-        Uri fileUri = Uri.fromFile(file); // Android 8 이하 대응용
+        Uri fileUri = FileProvider.getUriForFile(
+                this,
+                getPackageName() + ".provider",
+                file
+        );
+
         String fileName = "photo_" + System.currentTimeMillis() + ".jpg";
 
         StorageReference storageRef = FirebaseStorage.getInstance()

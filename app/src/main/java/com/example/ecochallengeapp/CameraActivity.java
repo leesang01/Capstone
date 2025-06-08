@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -65,20 +66,14 @@ public class CameraActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(v -> finish());
     }
 
+    // ✅ 항상 권한 요청 다이얼로그 뜨게 수정
     private void checkCameraPermissionAndOpenCamera() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    }, REQUEST_CAMERA_PERMISSION);
-        } else {
-            dispatchTakePictureIntent();
-        }
+        ActivityCompat.requestPermissions(this,
+                new String[]{
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                },
+                REQUEST_CAMERA_PERMISSION);
     }
 
     @Override
@@ -87,7 +82,9 @@ public class CameraActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length >= 2 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakePictureIntent();
             } else {
                 Toast.makeText(this, "카메라 및 저장소 권한이 필요합니다", Toast.LENGTH_SHORT).show();
@@ -130,6 +127,8 @@ public class CameraActivity extends AppCompatActivity {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(fileName, ".jpg", storageDir);
         currentPhotoPath = image.getAbsolutePath();
+
+        Log.d("CameraActivity", "📂 사진 저장 경로: " + currentPhotoPath);
         return image;
     }
 
@@ -138,7 +137,11 @@ public class CameraActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            if (currentPhotoPath == null || !(new File(currentPhotoPath).exists())) {
+            File imgFile = new File(currentPhotoPath);
+            Log.d("CameraActivity", "📸 파일 존재 여부: " + imgFile.exists());
+            Log.d("CameraActivity", "📸 파일 크기: " + imgFile.length());
+
+            if (!imgFile.exists() || imgFile.length() == 0) {
                 Toast.makeText(this, "사진 저장에 실패했습니다", Toast.LENGTH_SHORT).show();
                 return;
             }

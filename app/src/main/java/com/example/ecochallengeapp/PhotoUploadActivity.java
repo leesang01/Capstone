@@ -17,10 +17,8 @@ import androidx.exifinterface.media.ExifInterface;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.database.*;
+import com.google.firebase.storage.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +34,6 @@ public class PhotoUploadActivity extends AppCompatActivity {
     private int rewardCoin;
     private String missionId;
     private String missionTitle;
-
     private String uid;
 
     @Override
@@ -117,29 +114,31 @@ public class PhotoUploadActivity extends AppCompatActivity {
             return;
         }
 
-        Uri fileUri = Uri.fromFile(file);
+        Uri fileUri = Uri.fromFile(file); // Android 8 이하 대응용
         String fileName = "photo_" + System.currentTimeMillis() + ".jpg";
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference("photos/" + uid + "/" + fileName);
-        storageRef.putFile(fileUri).addOnSuccessListener(taskSnapshot -> {
-            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                String downloadUrl = uri.toString();
-                savePhotoDataToDatabase(downloadUrl);
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "URL 가져오기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            });
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "사진 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+        StorageReference storageRef = FirebaseStorage.getInstance()
+                .getReference("photos/" + uid + "/" + fileName);
+
+        storageRef.putFile(fileUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        savePhotoDataToDatabase(uri.toString());
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(this, "URL 가져오기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "사진 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void savePhotoDataToDatabase(String imageUrl) {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         DatabaseReference coinRef = userRef.child("coin");
-
         DatabaseReference photosRef = FirebaseDatabase.getInstance().getReference("Photos");
-        String photoId = photosRef.push().getKey();
 
+        String photoId = photosRef.push().getKey();
         if (photoId != null) {
             Map<String, Object> photoData = new HashMap<>();
             photoData.put("imageUrl", imageUrl);
@@ -157,26 +156,24 @@ public class PhotoUploadActivity extends AppCompatActivity {
             coinRef.setValue(updatedCoin).addOnSuccessListener(unused -> {
                 coinMessage.setText(rewardCoin + "코인을 획득하셨습니다!");
                 coinMessage.setVisibility(View.VISIBLE);
-
                 btnSubmit.setText("인증 완료");
                 btnSubmit.setEnabled(false);
                 btnGoHome.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getApplicationContext(), rewardCoin + "코인 지급 완료!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, rewardCoin + "코인 지급 완료!", Toast.LENGTH_SHORT).show();
 
                 if (missionId != null) {
-                    DatabaseReference completedRef = userRef.child("completedMissions").child(missionId);
-                    completedRef.setValue(true);
+                    userRef.child("completedMissions").child(missionId).setValue(true);
                 }
 
                 String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                 userRef.child("lastMissionDate").setValue(today);
 
             }).addOnFailureListener(e -> {
-                Toast.makeText(getApplicationContext(), "코인 저장 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "코인 저장 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
             });
         }).addOnFailureListener(e -> {
-            Toast.makeText(getApplicationContext(), "코인 조회 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "코인 조회 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
         });
     }
 }

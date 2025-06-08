@@ -56,7 +56,7 @@ public class CameraActivity extends AppCompatActivity {
 
         rewardCoin = getIntent().getIntExtra("rewardCoin", 10);
         missionId = getIntent().getStringExtra("missionId");
-        missionTitle = getIntent().getStringExtra("missionTitle");  // 🔹 미션 제목 받기
+        missionTitle = getIntent().getStringExtra("missionTitle");
 
         Button captureButton = findViewById(R.id.btnCapture);
         captureButton.setOnClickListener(v -> checkCameraPermissionAndOpenCamera());
@@ -67,9 +67,15 @@ public class CameraActivity extends AppCompatActivity {
 
     private void checkCameraPermissionAndOpenCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                    new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }, REQUEST_CAMERA_PERMISSION);
         } else {
             dispatchTakePictureIntent();
         }
@@ -84,7 +90,7 @@ public class CameraActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakePictureIntent();
             } else {
-                Toast.makeText(this, "카메라 권한이 필요합니다", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "카메라 및 저장소 권한이 필요합니다", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -132,6 +138,11 @@ public class CameraActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if (currentPhotoPath == null || !(new File(currentPhotoPath).exists())) {
+                Toast.makeText(this, "사진 저장에 실패했습니다", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             FirebaseDatabase.getInstance().getReference("Users")
                     .child(uid)
@@ -142,7 +153,7 @@ public class CameraActivity extends AppCompatActivity {
             intent.putExtra("photoPath", currentPhotoPath);
             intent.putExtra("rewardCoin", rewardCoin);
             intent.putExtra("missionId", missionId);
-            intent.putExtra("missionTitle", missionTitle);  // 🔹 미션 제목 전달
+            intent.putExtra("missionTitle", missionTitle);
             startActivity(intent);
             finish();
         } else {
